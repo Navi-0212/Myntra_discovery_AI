@@ -404,6 +404,12 @@ window.handleCopilotAnalyze = async function() {
   const query = input?.value.trim();
   if (!query) return;
 
+  // Clear query input so it's empty and ready for the user to type their next query
+  if (input) {
+    input.value = "";
+    input.placeholder = `Previous: "${query.slice(0, 40)}${query.length > 40 ? '...' : ''}" — Ask your next question...`;
+  }
+
   // Sync suggestion chips with input
   document.querySelectorAll(".query-chip").forEach(chip => {
     const chipText = chip.getAttribute("onclick") || "";
