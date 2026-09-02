@@ -1,6 +1,6 @@
 /**
- * Discovery Lens - Interactive Controller (v6.0)
- * 1:1 Pixel-Perfect with Design.md
+ * Discovery Lens - Desktop Web App Interactive Controller (v7.0)
+ * Rich PM Intelligence Aesthetic from Design.md
  */
 
 function getApiBase() {
@@ -36,8 +36,8 @@ window.promptBackendUrl = function() {
 
 /* ================= TAB ROUTING ================= */
 window.switchTab = function(targetId) {
-  // Update Bottom Tab Bar
-  document.querySelectorAll(".nav-bottom-tab").forEach(btn => {
+  // Update Desktop Tabs
+  document.querySelectorAll(".tab-nav-btn").forEach(btn => {
     if (btn.getAttribute("data-target") === targetId) {
       btn.classList.add("active");
     } else {
@@ -72,20 +72,29 @@ function initSentimentChart() {
   sentimentChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Sizing & Fit", "Price / Discounts"],
+      labels: ["Sizing & Fit", "Price / Discounts", "Fabric & Quality", "Returns & Refund", "App & Service UX"],
       datasets: [
-        { label: "Neg", data: [68, 52], backgroundColor: "#ff5e62", borderRadius: 4, barPercentage: 0.8 },
-        { label: "Neu", data: [20, 33], backgroundColor: "#4facfe", borderRadius: 4, barPercentage: 0.8 },
-        { label: "Pos", data: [12, 15], backgroundColor: "#00f2fe", borderRadius: 4, barPercentage: 0.8 }
+        { label: "Negative", data: [68, 52, 58, 76, 44], backgroundColor: "#ff5e62", borderRadius: 4, barPercentage: 0.7 },
+        { label: "Neutral", data: [20, 33, 28, 18, 24], backgroundColor: "#4facfe", borderRadius: 4, barPercentage: 0.7 },
+        { label: "Positive", data: [12, 15, 14, 6, 32], backgroundColor: "#00f2fe", borderRadius: 4, barPercentage: 0.7 }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#151724",
+          borderColor: "rgba(255, 77, 121, 0.4)",
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono', monospace" },
+          bodyFont: { family: "'Inter', sans-serif" }
+        }
+      },
       scales: {
-        x: { grid: { display: false }, ticks: { color: "#94a3b8", font: { family: "'JetBrains Mono', monospace", size: 10 } } },
-        y: { grid: { color: "rgba(255,255,255,0.06)" }, ticks: { color: "#64748b", font: { family: "'JetBrains Mono', monospace", size: 9 }, stepSize: 50 }, max: 100 }
+        x: { grid: { display: false }, ticks: { color: "#94a3b8", font: { family: "'JetBrains Mono', monospace", size: 11 } } },
+        y: { grid: { color: "rgba(255,255,255,0.06)" }, ticks: { color: "#64748b", font: { family: "'JetBrains Mono', monospace", size: 10 }, stepSize: 50 }, max: 100 }
       }
     }
   });
@@ -152,13 +161,13 @@ function formatMarkdown(text) {
   return text
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.*?)\*/g, "<em>$1</em>")
-    .replace(/###\s*(.*?)\n/g, "<div class='copilot-subhead' style='margin-top: 10px;'>$1</div>")
+    .replace(/###\s*(.*?)\n/g, "<div class='copilot-subhead-desktop' style='margin-top: 14px;'>$1</div>")
     .replace(/\n\n/g, "<br/><br/>");
 }
 
 /* ================= FORENSICS FILTERING ================= */
 window.filterCorpus = function(btnEl, source) {
-  document.querySelectorAll(".filter-pill-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".filter-pill-desktop").forEach(b => b.classList.remove("active"));
   if (btnEl) btnEl.classList.add("active");
 };
 

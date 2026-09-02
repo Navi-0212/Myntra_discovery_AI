@@ -7,623 +7,686 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css?v=6.0">
+  <link rel="stylesheet" href="/static/style.css?v=7.0">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="app-viewport-wrapper">
-    <div class="mobile-app-canvas">
-      <div class="canvas-content-layer">
-
-        <!-- Top Global Header (screen.png / screen0.png) -->
-        <header class="app-top-header">
-          <div class="app-brand-left" onclick="switchTab('tab-themes')">
-            <div class="brand-sq-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                <line x1="8" y1="17" x2="8" y2="13"></line>
-                <line x1="12" y1="17" x2="12" y2="9"></line>
-                <line x1="16" y1="17" x2="16" y2="7"></line>
-              </svg>
-            </div>
-            <span class="brand-name-tag">Discovery Lens</span>
+  <div class="webapp-container">
+    
+    <!-- Top Web App Header -->
+    <header class="webapp-header">
+      <div class="header-nav-row">
+        <div class="brand-identity" onclick="switchTab('tab-themes')">
+          <div class="brand-sq-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <line x1="8" y1="17" x2="8" y2="13"></line>
+              <line x1="12" y1="17" x2="12" y2="9"></line>
+              <line x1="16" y1="17" x2="16" y2="7"></line>
+            </svg>
           </div>
+          <span class="brand-title-tag">Discovery Lens</span>
+        </div>
 
-          <div class="app-header-right">
-            <div class="status-telemetry-badge" id="telemetry-status-badge" onclick="promptBackendUrl()">
-              <span class="pulse-dot-pink" id="header-pulse-dot"></span>
-              <span id="telemetry-header-text">CLUSTER 14: CONFIDENCE 94%</span>
+        <div class="header-telemetry-controls">
+          <div class="telemetry-status-badge" id="telemetry-status-badge" onclick="promptBackendUrl()">
+            <span class="pulse-dot-pink" id="header-pulse-dot"></span>
+            <span id="telemetry-header-text">CLUSTER 14: CONFIDENCE 94%</span>
+          </div>
+          <div class="header-broadcast-icon" style="color: var(--pink-primary); display: flex; align-items: center;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M4.93 4.93a10 10 0 0 0 0 14.14"></path>
+              <path d="M7.76 7.76a6 6 0 0 0 0 8.48"></path>
+              <circle cx="12" cy="12" r="2"></circle>
+              <path d="M16.24 7.76a6 6 0 0 1 0 8.48"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Web App Navigation Tabs -->
+      <nav class="webapp-tabs-nav">
+        <button class="tab-nav-btn active" data-target="tab-themes" onclick="switchTab('tab-themes')">
+          <span>🔥</span>
+          <span>Discovery Themes</span>
+        </button>
+        <button class="tab-nav-btn" data-target="tab-engine" onclick="switchTab('tab-engine')">
+          <span>📈</span>
+          <span>Hypothesis Engine</span>
+        </button>
+        <button class="tab-nav-btn" data-target="tab-hypothesis" onclick="switchTab('tab-hypothesis')">
+          <span>💡</span>
+          <span>10 PM Research Matrix</span>
+        </button>
+        <button class="tab-nav-btn" data-target="tab-forensics" onclick="switchTab('tab-forensics')">
+          <span>🔬</span>
+          <span>Forensic Explorer</span>
+        </button>
+        <button class="tab-nav-btn" data-target="tab-copilot" onclick="switchTab('tab-copilot')">
+          <span>🤖</span>
+          <span>Ask PM AI</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Tabs -->
+    <main>
+
+      <!-- ================= TAB 1: DISCOVERY THEMES (screen.png) ================= -->
+      <section class="tab-pane active" id="tab-themes">
+        <div class="hero-block">
+          <h1 class="hero-title-gradient">Discovery Themes</h1>
+          <p class="hero-subtitle-text">Synthesized Discovery Themes & Grounded Quotes. Every theme is backed by dense geometric clustering and verified verbatim customer quotes.</p>
+          <div class="hero-counter-pills">
+            <div class="counter-chip">
+              <span class="chip-icon">⭘</span>
+              <span id="themes-cluster-count">314 Clusters</span>
             </div>
-            <div class="header-broadcast-icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M4.93 4.93a10 10 0 0 0 0 14.14"></path>
-                <path d="M7.76 7.76a6 6 0 0 0 0 8.48"></path>
-                <circle cx="12" cy="12" r="2"></circle>
-                <path d="M16.24 7.76a6 6 0 0 1 0 8.48"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-              </svg>
+            <div class="counter-chip">
+              <span class="chip-icon">✦</span>
+              <span id="themes-count">24 Themes</span>
             </div>
           </div>
-        </header>
+        </div>
 
-        <!-- ================= TAB 1: THEMES VIEW (screen.png) ================= -->
-        <section class="tab-pane active" id="tab-themes">
-          <div class="page-title-block">
-            <h1 class="page-main-title">Discovery<br/>Themes</h1>
-            <p class="page-desc-text">Synthesized Discovery Themes & Grounded Quotes. Every theme is backed by dense geometric clustering and verified verbatim customer quotes.</p>
-            <div class="pills-counter-row">
-              <div class="counter-pill">
-                <span class="pill-symbol">⭘</span>
-                <span id="themes-cluster-count">314 Clusters</span>
+        <!-- 3-Column Themes Grid -->
+        <div class="grid-3col">
+          
+          <!-- Theme 01 -->
+          <div class="theme-card-desktop">
+            <div class="theme-card-header">
+              <div class="theme-tag-group">
+                <span class="theme-idx-badge">THEME 01</span>
+                <span class="theme-impact-pill">High Impact</span>
               </div>
-              <div class="counter-pill">
-                <span class="pill-symbol">✦</span>
-                <span id="themes-count">24 Themes</span>
+              <div class="mentions-stat-col">
+                <span class="mentions-label-sub">MENTIONS</span>
+                <span class="mentions-value-big">14,289</span>
               </div>
             </div>
-          </div>
-
-          <!-- Theme Card 01 (screen.png) -->
-          <div class="theme-card-layout">
-            <div class="theme-top-meta">
-              <div class="theme-tag-pair">
-                <span class="theme-idx-text">THEME 01</span>
-                <span class="theme-impact-badge">High Impact</span>
-              </div>
-              <div class="mentions-box">
-                <span class="mentions-title">MENTIONS</span>
-                <span class="mentions-number">14,289</span>
-              </div>
-            </div>
-            <h3 class="theme-title-text">Sizing Ambiguity & Fit Uncertainty</h3>
-            <p class="theme-description-text">Users frequently report anxiety regarding inconsistent sizing across different private labels, leading to hesitation in finalizing purchases and increased reliance on wishlists as a "holding pen."</p>
-            <div class="inner-quote-card">
-              <div class="quote-99-watermark">99</div>
-              <div class="quote-source-label">
+            <h3 class="theme-title-h3">Sizing Ambiguity & Fit Uncertainty</h3>
+            <p class="theme-desc-p">Users frequently report anxiety regarding inconsistent sizing across different private labels, leading to hesitation in finalizing purchases and increased reliance on wishlists as a "holding pen."</p>
+            <div class="grounded-quote-box-rich">
+              <div class="watermark-99">99</div>
+              <div class="quote-source-header">
                 <span>💬</span>
                 <span>Reddit · r/IndianFashionAddicts</span>
               </div>
-              <div class="quote-body-italic">"I have like 20 items sitting in my wishlist for weeks. I want to buy them but the sizing is so unpredictable. One brand's M is another's XL. I just wait until I have the energy to deal with potential returns."</div>
-              <div class="quote-action-buttons">
-                <button class="btn-pill-action" onclick="copyQuoteToClipboard('I have like 20 items sitting in my wishlist for weeks. Sizing is unpredictable.')">
+              <div class="quote-body-text-rich">"I have like 20 items sitting in my wishlist for weeks. I want to buy them but the sizing is so unpredictable. One brand's M is another's XL. I just wait until I have the energy to deal with potential returns."</div>
+              <div class="quote-action-buttons-row">
+                <button class="btn-pill-desktop" onclick="copyQuoteToClipboard('I have like 20 items sitting in my wishlist for weeks. Sizing is unpredictable.')">
                   <span>📋 Copy</span>
                 </button>
-                <button class="btn-pill-action" onclick="openVideoModal('q4ZlWQ387SI', 'Myntra Kurti & Dress Sizing Reality Check', 'One brand M is another XL. I just wait until I have energy to deal with returns.')">
+                <button class="btn-pill-desktop pink-cta" onclick="openVideoModal('q4ZlWQ387SI', 'Myntra Kurti & Dress Sizing Reality Check', 'One brand M is another XL. I just wait until I have energy to deal with returns.')">
                   <span>↗ View Source</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Theme Card 02 (screen.png) -->
-          <div class="theme-card-layout">
-            <div class="theme-top-meta">
-              <div class="theme-tag-pair">
-                <span class="theme-idx-text">THEME 02</span>
-                <span class="theme-impact-badge blocker">Conversion Blocker</span>
+          <!-- Theme 02 -->
+          <div class="theme-card-desktop">
+            <div class="theme-card-header">
+              <div class="theme-tag-group">
+                <span class="theme-idx-badge">THEME 02</span>
+                <span class="theme-impact-pill blocker">Conversion Blocker</span>
               </div>
-              <div class="mentions-box">
-                <span class="mentions-title">MENTIONS</span>
-                <span class="mentions-number">9,842</span>
+              <div class="mentions-stat-col">
+                <span class="mentions-label-sub">MENTIONS</span>
+                <span class="mentions-value-big">9,842</span>
               </div>
             </div>
-            <h3 class="theme-title-text">Fake Discount Fatigue</h3>
-            <p class="theme-description-text">Persistent perception that "Original Prices" are artificially inflated before sales. This erodes trust and causes users to delay purchases indefinitely, waiting for a "genuine" price drop alert.</p>
-            <div class="inner-quote-card">
-              <div class="quote-99-watermark">99</div>
-              <div class="quote-source-label">
+            <h3 class="theme-title-h3">Fake Discount Fatigue</h3>
+            <p class="theme-desc-p">Persistent perception that "Original Prices" are artificially inflated before sales. This erodes trust and causes users to delay purchases indefinitely, waiting for a "genuine" price drop alert.</p>
+            <div class="grounded-quote-box-rich">
+              <div class="watermark-99">99</div>
+              <div class="quote-source-header">
                 <span>🔴</span>
                 <span>YouTube · Haul Review</span>
               </div>
-              <div class="quote-body-italic">"They hiked the MRP to 3999 just to show a 60% discount during the Big Fashion Festival. I tracked this top last month and it was literally 1499 then. Don't fall for the fake urgency guys."</div>
-              <div class="quote-action-buttons">
-                <button class="btn-pill-action" onclick="copyQuoteToClipboard('They hiked the MRP to 3999 just to show a 60% discount.')">
+              <div class="quote-body-text-rich">"They hiked the MRP to 3999 just to show a 60% discount during the Big Fashion Festival. I tracked this top last month and it was literally 1499 then. Don't fall for the fake urgency guys."</div>
+              <div class="quote-action-buttons-row">
+                <button class="btn-pill-desktop" onclick="copyQuoteToClipboard('They hiked the MRP to 3999 just to show a 60% discount.')">
                   <span>📋 Copy</span>
                 </button>
-                <button class="btn-pill-action" onclick="openVideoModal('xuc76uMSJyg', 'Myntra Big Fashion Festival Haul Review', 'They hiked base MRP before sale to show fake discount.')">
+                <button class="btn-pill-desktop pink-cta" onclick="openVideoModal('xuc76uMSJyg', 'Myntra Big Fashion Festival Haul Review', 'They hiked base MRP before sale to show fake discount.')">
                   <span>↗ View Source</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Theme Card 03 (screen.png) -->
-          <div class="theme-card-layout">
-            <div class="theme-top-meta">
-              <div class="theme-tag-pair">
-                <span class="theme-idx-text">THEME 03</span>
-                <span class="theme-impact-badge friction">Friction Point</span>
+          <!-- Theme 03 -->
+          <div class="theme-card-desktop">
+            <div class="theme-card-header">
+              <div class="theme-tag-group">
+                <span class="theme-idx-badge">THEME 03</span>
+                <span class="theme-impact-pill friction">Friction Point</span>
               </div>
-              <div class="mentions-box">
-                <span class="mentions-title">MENTIONS</span>
-                <span class="mentions-number">7,105</span>
+              <div class="mentions-stat-col">
+                <span class="mentions-label-sub">MENTIONS</span>
+                <span class="mentions-value-big">7,105</span>
               </div>
             </div>
-            <h3 class="theme-title-text">Post–Order Return Friction Fear</h3>
-            <p class="theme-description-text">Anticipation of a difficult return process (e.g., store credit instead of original payment method, pickup delays) acts as a primary deterrent to converting wishlist items to cart.</p>
-            <div class="inner-quote-card">
-              <div class="quote-99-watermark">99</div>
-              <div class="quote-source-label">
+            <h3 class="theme-title-h3">Post–Order Return Friction Fear</h3>
+            <p class="theme-desc-p">Anticipation of a difficult return process (e.g., store credit instead of original payment method, pickup delays) acts as a primary deterrent to converting wishlist items to cart.</p>
+            <div class="grounded-quote-box-rich">
+              <div class="watermark-99">99</div>
+              <div class="quote-source-header">
                 <span>🛍️</span>
                 <span>Play Store · 1 Star Review</span>
               </div>
-              <div class="quote-body-italic">"I wanted to buy 3 dresses to try, but the app said 'Return to Myntra Credit only' for two of them. I'm not locking up 5000 rupees in a wallet. Abandoned the whole cart. Please bring back normal refunds."</div>
-              <div class="quote-action-buttons">
-                <button class="btn-pill-action" onclick="copyQuoteToClipboard('Return to Myntra Credit only. Abandoned whole cart.')">
+              <div class="quote-body-text-rich">"I wanted to buy 3 dresses to try, but the app said 'Return to Myntra Credit only' for two of them. I'm not locking up 5000 rupees in a wallet. Abandoned the whole cart. Please bring back normal refunds."</div>
+              <div class="quote-action-buttons-row">
+                <button class="btn-pill-desktop" onclick="copyQuoteToClipboard('Return to Myntra Credit only. Abandoned whole cart.')">
                   <span>📋 Copy</span>
                 </button>
-                <button class="btn-pill-action" onclick="openVideoModal('npnBJwtdK68', 'Myntra Return Policy Customer Review', 'Store credit return fears prevent users from completing checkout.')">
+                <button class="btn-pill-desktop pink-cta" onclick="openVideoModal('npnBJwtdK68', 'Myntra Return Policy Customer Review', 'Store credit return fears prevent users from completing checkout.')">
                   <span>↗ View Source</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Sentiment by Theme Visualizer (screen.png) -->
-          <div class="sentiment-chart-box">
-            <div class="card-micro-header">
+        </div>
+
+        <!-- 2-Column Analytics Row -->
+        <div class="grid-2col">
+          
+          <!-- Sentiment by Theme Bar Chart -->
+          <div class="sentiment-chart-card">
+            <div class="card-top-tag">
               <span>SENTIMENT BY THEME</span>
               <span>📊</span>
             </div>
-            <div style="position: relative; height: 160px; width: 100%;">
+            <div style="position: relative; height: 220px; width: 100%;">
               <canvas id="chart-sentiment-themes"></canvas>
             </div>
-            <div class="sentiment-legend-row">
-              <span><span class="legend-dot neg"></span> Neg</span>
-              <span><span class="legend-dot neu"></span> Neu</span>
-              <span><span class="legend-dot pos"></span> Pos</span>
+            <div class="sentiment-legend-desktop">
+              <span><span class="legend-dot-el neg"></span> Negative</span>
+              <span><span class="legend-dot-el neu"></span> Neutral</span>
+              <span><span class="legend-dot-el pos"></span> Positive</span>
             </div>
           </div>
 
-          <!-- PM Intelligence Persona Profile (screen.png) -->
-          <div class="persona-synthesis-card">
-            <div class="card-micro-header pink">
+          <!-- PM Intelligence Persona Profile -->
+          <div class="persona-synthesis-card-desktop">
+            <div class="card-top-tag pink">
               <span>💡 PM INTELLIGENCE SYNTHESIS</span>
             </div>
-            <h3 class="persona-title-text">"The Hesitant Wishlist Hoarder" Profile</h3>
-            <p class="theme-description-text">Shoppers actively shortlist 10–30 items for aspirational curation, but hesitate to cart. They stall due to sizing unpredictability and fear of return friction, using wishlists as a persistent price-drop holding pen.</p>
-            <div class="persona-pills-wrap">
-              <span class="tag-badge-item">Fit Confidence Predictor</span>
-              <span class="tag-badge-item">Direct Price-Drop Alerts</span>
+            <h3 class="persona-title-desktop">"The Hesitant Wishlist Hoarder" Profile</h3>
+            <p class="theme-desc-p">Shoppers actively shortlist 10–30 items for aspirational curation, but hesitate to cart. They stall due to sizing unpredictability and fear of return friction, using wishlists as a persistent price-drop holding pen.</p>
+            <div class="persona-pills-row-desktop">
+              <span class="persona-pill-item">Fit Confidence Predictor</span>
+              <span class="persona-pill-item">Direct Price-Drop Alerts</span>
+              <span class="persona-pill-item">Instant Doorstep Size Exchange</span>
             </div>
           </div>
 
-        </section>
+        </div>
 
-        <!-- ================= TAB 2: ENGINE & TELEMETRY (screen0.png, screen4.png, screen5.png) ================= -->
-        <section class="tab-pane" id="tab-engine">
+      </section>
+
+      <!-- ================= TAB 2: HYPOTHESIS ENGINE (screen0.png, screen4.png, screen5.png) ================= -->
+      <section class="tab-pane" id="tab-engine">
+        
+        <!-- Hypothesis Engine Banner -->
+        <div class="hypothesis-hero-banner">
+          <div class="hypothesis-hero-title">HYPOTHESIS ENGINE</div>
+          <div class="hypothesis-hero-text">Sizing ambiguity, fake discount fatigue, and return friction—not product discovery or brand awareness—are the dominant barriers turning active wishlists into abandoned carts.</div>
+        </div>
+
+        <!-- 3-Column Telemetry Grid -->
+        <div class="grid-3col">
           
-          <!-- Hypothesis Engine Card -->
-          <div class="hypothesis-engine-banner">
-            <div class="hypothesis-tag">HYPOTHESIS ENGINE</div>
-            <div class="hypothesis-body">Sizing ambiguity, fake discount fatigue, and return friction—not product discovery or brand awareness—are the dominant barriers turning active wishlists into abandoned carts.</div>
-          </div>
-
-          <!-- Friction Distribution Card (screen0.png) -->
-          <div class="design-card">
-            <div class="card-micro-header">
+          <!-- Friction Distribution Card -->
+          <div class="webapp-card">
+            <div class="card-top-tag">
               <span>FRICTION DISTRIBUTION</span>
             </div>
-            <div class="friction-meter-group">
-              <div class="friction-row">
-                <div class="friction-info-row">
-                  <span class="friction-label-pink">Sizing Ambiguity</span>
-                  <span class="friction-pct">38%</span>
+            <div class="friction-meters-group">
+              <div class="friction-meter-item">
+                <div class="friction-meter-header">
+                  <span style="color: var(--pink-primary);">Sizing Ambiguity</span>
+                  <span style="color: #fff; font-weight: 700;">38%</span>
                 </div>
-                <div class="friction-track">
-                  <div class="friction-fill pink" style="width: 38%;"></div>
-                </div>
-              </div>
-              <div class="friction-row">
-                <div class="friction-info-row">
-                  <span class="friction-label-yellow">Price Sensitivity</span>
-                  <span class="friction-pct">25%</span>
-                </div>
-                <div class="friction-track">
-                  <div class="friction-fill yellow" style="width: 25%;"></div>
+                <div class="meter-track">
+                  <div class="meter-fill pink" style="width: 38%;"></div>
                 </div>
               </div>
-              <div class="friction-row">
-                <div class="friction-info-row">
-                  <span class="friction-label-blue">Fabric Quality</span>
-                  <span class="friction-pct">18%</span>
+              <div class="friction-meter-item">
+                <div class="friction-meter-header">
+                  <span style="color: var(--accent-peach);">Price Sensitivity</span>
+                  <span style="color: #fff; font-weight: 700;">25%</span>
                 </div>
-                <div class="friction-track">
-                  <div class="friction-fill blue" style="width: 18%;"></div>
+                <div class="meter-track">
+                  <div class="meter-fill yellow" style="width: 25%;"></div>
+                </div>
+              </div>
+              <div class="friction-meter-item">
+                <div class="friction-meter-header">
+                  <span style="color: var(--accent-purple);">Fabric Quality</span>
+                  <span style="color: #fff; font-weight: 700;">18%</span>
+                </div>
+                <div class="meter-track">
+                  <div class="meter-fill blue" style="width: 18%;"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Archetype Radial Donut Card (screen0.png) -->
-          <div class="design-card">
-            <div class="card-micro-header">
+          <!-- Archetype Radial Donut Card -->
+          <div class="webapp-card">
+            <div class="card-top-tag">
               <span>ARCHETYPE</span>
             </div>
-            <div class="archetype-box">
-              <div class="donut-svg-wrap">
-                <svg class="donut-svg" viewBox="0 0 120 120">
-                  <circle class="donut-track" cx="60" cy="60" r="48"></circle>
-                  <circle class="donut-arc" cx="60" cy="60" r="48"></circle>
+            <div class="archetype-gauge-center">
+              <div class="donut-svg-container">
+                <svg class="donut-svg-el" viewBox="0 0 140 140">
+                  <circle class="donut-bg-circle" cx="70" cy="70" r="54"></circle>
+                  <circle class="donut-progress-arc" cx="70" cy="70" r="54"></circle>
                 </svg>
-                <div class="donut-text-center">42%</div>
+                <div class="donut-pct-text">42%</div>
               </div>
-              <div class="archetype-name">Wishlist Hoarder</div>
+              <div class="archetype-label-bottom">Wishlist Hoarder</div>
             </div>
           </div>
 
-          <!-- Source Volumes Card (screen0.png) -->
-          <div class="design-card">
-            <div class="card-micro-header">
+          <!-- Source Volumes Card -->
+          <div class="webapp-card">
+            <div class="card-top-tag">
               <span>SOURCE VOLUMES</span>
             </div>
-            <div class="source-vols-list">
-              <div class="source-vol-item">
-                <div style="display: flex; align-items: center; gap: 6px;">
+            <div class="source-volumes-list">
+              <div class="source-vol-row">
+                <div style="display: flex; align-items: center; gap: 8px;">
                   <span>🛍️</span>
                   <span>Play Store</span>
                 </div>
-                <div class="vol-bars-graphic">
-                  <div class="vol-col" style="height: 5px;"></div>
-                  <div class="vol-col" style="height: 9px;"></div>
-                  <div class="vol-col" style="height: 13px;"></div>
-                  <div class="vol-col" style="height: 16px;"></div>
+                <div class="vis-bars-container">
+                  <div class="vis-col" style="height: 6px;"></div>
+                  <div class="vis-col" style="height: 10px;"></div>
+                  <div class="vis-col" style="height: 14px;"></div>
+                  <div class="vis-col" style="height: 18px;"></div>
                 </div>
               </div>
-              <div class="source-vol-item">
-                <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="source-vol-row">
+                <div style="display: flex; align-items: center; gap: 8px;">
                   <span>💬</span>
                   <span>Reddit</span>
                 </div>
-                <div class="vol-bars-graphic">
-                  <div class="vol-col amber" style="height: 4px;"></div>
-                  <div class="vol-col amber" style="height: 7px;"></div>
-                  <div class="vol-col amber" style="height: 11px;"></div>
+                <div class="vis-bars-container">
+                  <div class="vis-col amber" style="height: 5px;"></div>
+                  <div class="vis-col amber" style="height: 9px;"></div>
+                  <div class="vis-col amber" style="height: 13px;"></div>
+                </div>
+              </div>
+              <div class="source-vol-row">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span>🔴</span>
+                  <span>YouTube Try-On Hauls</span>
+                </div>
+                <div class="vis-bars-container">
+                  <div class="vis-col pink" style="height: 7px;"></div>
+                  <div class="vis-col pink" style="height: 12px;"></div>
+                  <div class="vis-col pink" style="height: 16px;"></div>
+                </div>
+              </div>
+              <div class="source-vol-row">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span>🍏</span>
+                  <span>App Store</span>
+                </div>
+                <div class="vis-bars-container">
+                  <div class="vis-col cyan" style="height: 6px;"></div>
+                  <div class="vis-col cyan" style="height: 11px;"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Grounded Discovery Section Header -->
-          <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0 2px 0;">
-            <span style="font-size: 1.3rem; color: var(--pink-primary);">🧠</span>
-            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff;">Grounded Discovery</h2>
-          </div>
+        </div>
 
-          <!-- Grounded Discovery Cluster #14 Card (screen0.png) -->
-          <div class="grounded-cluster-box">
-            <div class="cluster-meta-top">
-              <span class="cluster-num-label">CLUSTER #14</span>
-              <span class="cluster-n-pill">N=1,420</span>
+        <!-- Grounded Discovery Cluster #14 Card -->
+        <div class="cluster-hero-card">
+          <div class="cluster-header-row">
+            <span class="cluster-tag-text">CLUSTER #14</span>
+            <span class="cluster-pill-n">N=1,420</span>
+          </div>
+          <div class="cluster-main-title">SIZING & FABRIC SHEERNESS</div>
+          <div class="code-quote-container">
+            "The kurti looks great but the fabric is so sheer. Sizing is super unpredictable compared to standard international brands."
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn-pill-desktop pink-cta" onclick="openVideoModal('4qrpnaJu2tk', 'Myntra Try-On Haul: Fabric Transparency Review', 'Watch try-on videos before purchasing because fabric can be very sheer in real light.')">
+              <span>🎬 Preview Try-On Video</span>
+            </button>
+            <button class="btn-pill-desktop" onclick="copyQuoteToClipboard('The kurti looks great but the fabric is so sheer. Sizing is super unpredictable.')">
+              <span>📋 Copy Quote</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 3: 10 PM RESEARCH MATRIX (screen1.png) ================= -->
+      <section class="tab-pane" id="tab-hypothesis">
+        <div class="hero-block">
+          <h1 class="hero-title-gradient">10 Core PM Research Questions Matrix</h1>
+          <p class="hero-subtitle-text">Comprehensive empirical synthesis derived from 124k+ reviews mapped directly to the case study questions.</p>
+        </div>
+
+        <!-- Behavioral Mapping Matrix Table (screen1.png) -->
+        <div class="matrix-table-card-desktop">
+          <div class="card-top-tag" style="margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>⊞</span>
+              <span>BEHAVIORAL MAPPING MATRIX</span>
             </div>
-            <div class="cluster-heading">SIZING & FABRIC SHEERNESS</div>
-            <div class="code-quote-box">
-              "The kurti looks great but the fabric is so sheer. Sizing is super unpredictable compared to standard international brands."
+          </div>
+          <table class="matrix-table-desktop">
+            <thead>
+              <tr>
+                <th style="width: 28%;">Research Dimension</th>
+                <th style="width: 52%;">Dominant Behavioral Finding</th>
+                <th style="width: 20%;">Evidence (N=124k)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="matrix-dim-title-desktop">1. Wishlist Intent vs Reality</div></td>
+                <td><div class="matrix-finding-desc-desktop">Used as a "holding pen" for price drops, not actual curation. High abandonment when friction introduced.</div></td>
+                <td><div class="evidence-bar-desktop"></div></td>
+              </tr>
+              <tr>
+                <td><div class="matrix-dim-title-desktop">2. Sizing Uncertainty Impact</div></td>
+                <td><div class="matrix-finding-desc-desktop">Primary driver of cart abandonment. Users lack confidence in private label fit consistency.</div></td>
+                <td><div class="evidence-bar-desktop"></div></td>
+              </tr>
+              <tr>
+                <td><div class="matrix-dim-title-desktop">3. Post-Order Return Friction Fear</div></td>
+                <td><div class="matrix-finding-desc-desktop">Anxiety around difficult return processes prevents initial purchase commitment.</div></td>
+                <td><div class="evidence-bar-desktop"></div></td>
+              </tr>
+              <tr>
+                <td><div class="matrix-dim-title-desktop">4. Fake Discount Perception</div></td>
+                <td><div class="matrix-finding-desc-desktop">Users actively doubt "sale" prices, delaying purchase to verify historical price baselines.</div></td>
+                <td><div class="evidence-bar-desktop"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 2-Column Row for Verified Segment & Grounded Quote -->
+        <div class="grid-2col">
+          
+          <!-- Dominant Segment Verified Card -->
+          <div class="verified-segment-card-desktop">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="card-top-tag" style="margin-bottom: 0;">👥 DOMINANT USER SEGMENT</span>
+              <span class="verified-badge-desktop">VERIFIED</span>
+            </div>
+            <h3 class="theme-title-h3">"The Hesitant Wishlist Hoarder"</h3>
+            <p class="theme-desc-p">Shoppers who actively shortlist 10–30 fashion items for aspirational curation and outfit matching, but hesitate to transition items to cart. Rather than lacking product discovery or brand awareness, users stall due to <strong style="color: var(--pink-primary);">sizing unpredictability</strong> across private labels and <strong style="color: var(--pink-primary);">fear of post-order return friction</strong>.</p>
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+              <span class="curation-status-pill"><span class="legend-dot-el neg"></span> High Curation</span>
+              <span class="curation-status-pill"><span class="legend-dot-el pos"></span> Low Conversion</span>
             </div>
           </div>
 
-        </section>
-
-        <!-- ================= TAB 3: HYPOTHESIS & 10 PM RESEARCH MATRIX (screen1.png) ================= -->
-        <section class="tab-pane" id="tab-hypothesis">
-          <div class="page-title-block">
-            <h1 class="page-main-title">10 Core PM Research<br/>Questions Matrix</h1>
-            <p class="page-desc-text">Comprehensive empirical synthesis derived from 124k+ reviews mapped directly to the case study questions.</p>
-          </div>
-
-          <!-- Behavioral Mapping Matrix Table (screen1.png) -->
-          <div class="matrix-card-wrap">
-            <div class="card-micro-header">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span>⊞</span>
-                <span>BEHAVIORAL MAPPING MATRIX</span>
+          <!-- Synthesized Grounded Quote -->
+          <div class="grounded-quote-box-rich" style="border-left: 3px solid var(--pink-primary); height: 100%; justify-content: space-between;">
+            <div>
+              <div class="card-top-tag" style="color: var(--text-muted); margin-bottom: 12px;">
+                <span>❝ SYNTHESIZED GROUNDED QUOTE</span>
+              </div>
+              <div class="quote-body-text-rich" style="font-size: 1.05rem; line-height: 1.6; color: #fff;">
+                "I watch try-on videos before purchasing because fabric can be very sheer, and sizing is basically a guessing game across brands."
               </div>
             </div>
-            <table class="matrix-grid-table">
-              <thead>
-                <tr>
-                  <th style="width: 32%;">Research<br/>Dimension</th>
-                  <th style="width: 48%;">Dominant<br/>Behavioral Finding</th>
-                  <th style="width: 20%;">Evidence<br/>(N=124k)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><div class="matrix-col-dim">1. Wishlist Intent vs Reality</div></td>
-                  <td><div class="matrix-col-finding">Used as a "holding pen" for price drops, not actual curation. High abandonment when friction introduced.</div></td>
-                  <td><div class="evidence-bar-graphic"></div></td>
-                </tr>
-                <tr>
-                  <td><div class="matrix-col-dim">2. Sizing Uncertainty Impact</div></td>
-                  <td><div class="matrix-col-finding">Primary driver of cart abandonment. Users lack confidence in private label fit consistency.</div></td>
-                  <td><div class="evidence-bar-graphic"></div></td>
-                </tr>
-                <tr>
-                  <td><div class="matrix-col-dim">3. Post-Order Return Friction Fear</div></td>
-                  <td><div class="matrix-col-finding">Anxiety around difficult return processes prevents initial purchase commitment.</div></td>
-                  <td><div class="evidence-bar-graphic"></div></td>
-                </tr>
-                <tr>
-                  <td><div class="matrix-col-dim">4. Fake Discount Perception</div></td>
-                  <td><div class="matrix-col-finding">Users actively doubt "sale" prices, delaying purchase to verify historical price baselines.</div></td>
-                  <td><div class="evidence-bar-graphic"></div></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Dominant User Segment Card (screen1.png) -->
-          <div class="verified-segment-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="card-micro-header" style="margin-bottom: 0;">👥 DOMINANT USER SEGMENT</span>
-              <span class="verified-tag-pill">VERIFIED</span>
-            </div>
-            <h3 class="theme-title-text">"The Hesitant Wishlist Hoarder"</h3>
-            <p class="theme-description-text">Shoppers who actively shortlist 10–30 fashion items for aspirational curation and outfit matching, but hesitate to transition items to cart. Rather than lacking product discovery or brand awareness, users stall due to <strong style="color: var(--pink-primary);">sizing unpredictability</strong> across private labels and <strong style="color: var(--pink-primary);">fear of post-order return friction</strong>.</p>
-            <div class="segment-curation-pills">
-              <span class="dot-status-pill"><span class="legend-dot neg" style="width: 5px; height: 5px;"></span> High Curation</span>
-              <span class="dot-status-pill"><span class="legend-dot pos" style="width: 5px; height: 5px;"></span> Low Conversion</span>
-            </div>
-          </div>
-
-          <!-- Synthesized Grounded Quote (screen1.png) -->
-          <div class="inner-quote-card" style="border-left: 3px solid var(--pink-primary);">
-            <div class="card-micro-header" style="color: var(--text-muted);">
-              <span>❝ SYNTHESIZED GROUNDED QUOTE</span>
-            </div>
-            <div class="quote-body-italic" style="font-size: 0.95rem; line-height: 1.6; color: #fff;">
-              "I watch try-on videos before purchasing because fabric can be very sheer, and sizing is basically a guessing game across brands."
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #94a3b8; margin-top: 4px;">
-              <span style="display: flex; align-items: center; gap: 4px; color: #ff5e62;">🔴 YouTube Evidence</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #94a3b8; margin-top: 16px;">
+              <span style="display: flex; align-items: center; gap: 6px; color: #ff5e62;">🔴 YouTube Evidence</span>
               <span>Cluster: Sizing & Fit</span>
             </div>
           </div>
 
-        </section>
+        </div>
 
-        <!-- ================= TAB 4: FORENSICS EXPLORER (screen3.png) ================= -->
-        <section class="tab-pane" id="tab-forensics">
-          <div class="page-title-block">
-            <h1 class="page-main-title">Forensic Explorer</h1>
-            <p class="page-desc-text">Search and filter all 124,433 reviews across App Store, Play Store, YouTube, and Reddit.</p>
-            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 4px 10px; border-radius: var(--radius-full); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent-green);">
-              <span class="pulse-dot-green"></span>
-              <span>Engine Live</span>
+      </section>
+
+      <!-- ================= TAB 4: FORENSIC EXPLORER (screen3.png) ================= -->
+      <section class="tab-pane" id="tab-forensics">
+        <div class="hero-block">
+          <h1 class="hero-title-gradient">Forensic Explorer</h1>
+          <p class="hero-subtitle-text">Search and filter all 124,433 reviews across App Store, Play Store, YouTube, and Reddit.</p>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 6px 14px; border-radius: var(--radius-full); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--accent-green);">
+            <span class="pulse-dot-green"></span>
+            <span>Engine Live</span>
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards in 4-Column Grid (screen3.png) -->
+        <div class="grid-4col">
+          <div class="forensic-mini-card-desktop">
+            <span class="card-top-tag" style="font-size: 0.72rem; color: var(--text-muted);">TOTAL RAW CORPUS</span>
+            <span class="forensic-card-num-desktop peach">124,433</span>
+            <span style="font-size: 0.78rem; color: #94a3b8;">Multi-Channel Scrape</span>
+          </div>
+          <div class="forensic-mini-card-desktop">
+            <span class="card-top-tag" style="font-size: 0.72rem; color: var(--text-muted);">UNIFIED CLEAN RECORDS</span>
+            <span class="forensic-card-num-desktop">49,229</span>
+            <span style="font-size: 0.78rem; color: #94a3b8;">Deduped & PII Scrubbed</span>
+          </div>
+          <div class="forensic-mini-card-desktop">
+            <span class="card-top-tag" style="font-size: 0.72rem; color: var(--text-muted);">DISCOVERED CLUSTERS</span>
+            <span class="forensic-card-num-desktop">314</span>
+            <span style="font-size: 0.78rem; color: #94a3b8;">HDBSCAN Density Peaks</span>
+          </div>
+          <div class="forensic-mini-card-desktop">
+            <span class="card-top-tag" style="font-size: 0.72rem; color: var(--text-muted);">SYNTHESIZED THEMES</span>
+            <span class="forensic-card-num-desktop green">290</span>
+            <span style="font-size: 0.78rem; color: #94a3b8;">100% Grounded Quotes</span>
+          </div>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="webapp-card" style="padding: 18px;">
+          <div class="forensic-filter-bar-desktop">
+            <input type="text" id="corpus-search-input" class="copilot-input-field-desktop" style="background: var(--bg-quote); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); flex-grow: 1; min-width: 280px;" placeholder="🔍 Search corpus (e.g. 'sizing uncertainty', 'return hassle')..." />
+            <button class="filter-pill-desktop active" onclick="filterCorpus(this, '')">All Sources</button>
+            <button class="filter-pill-desktop" onclick="filterCorpus(this, 'app_store')">App Store</button>
+            <button class="filter-pill-desktop" onclick="filterCorpus(this, 'play_store')">Play Store</button>
+            <button class="filter-pill-desktop" onclick="filterCorpus(this, 'youtube')">YouTube</button>
+            <button class="filter-pill-desktop" onclick="filterCorpus(this, 'reddit')">Reddit</button>
+          </div>
+        </div>
+
+        <!-- Noise Cluster Alert Banner (screen3.png) -->
+        <div class="noise-alert-banner-desktop">
+          <div style="font-size: 1.4rem; color: var(--accent-peach);">⚠️</div>
+          <div>
+            <h4 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-peach); margin-bottom: 2px;">Noise Cluster View Active</h4>
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">Viewing HDBSCAN -1 outliers. These records fall outside established density peaks and may contain emerging edge cases or anomalous behavior.</p>
+          </div>
+        </div>
+
+        <!-- Corpus Data Table (screen3.png) -->
+        <div class="matrix-table-card-desktop">
+          <table class="matrix-table-desktop">
+            <thead>
+              <tr>
+                <th style="width: 18%;">SOURCE</th>
+                <th style="width: 62%;">REVIEW TEXT</th>
+                <th style="width: 20%;">CLUSTER</th>
+              </tr>
+            </thead>
+            <tbody id="corpus-tbody">
+              <tr>
+                <td><span class="mono-tag" style="color: #ff5e62; font-weight: 700;">🔴 YT</span></td>
+                <td><div class="matrix-finding-desc-desktop">"Watch try-on videos before purchasing because fabric can be very sheer. Sizing is super unpredictable compared to H&M."</div></td>
+                <td><span class="persona-pill-item" style="color: var(--accent-peach);">Noise (-1)</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono-tag" style="color: #60a5fa; font-weight: 700;">🍏 App Store</span></td>
+                <td><div class="matrix-finding-desc-desktop">"App crashes during flash sale checkout when coupon is applied to wishlisted kurtas."</div></td>
+                <td><span class="persona-pill-item">Cluster #4</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono-tag" style="color: #ffaa5a; font-weight: 700;">💬 Reddit</span></td>
+                <td><div class="matrix-finding-desc-desktop">"I have 20 items in my wishlist for weeks. Sizing between private labels varies dramatically."</div></td>
+                <td><span class="persona-pill-item">Cluster #14</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #94a3b8; padding-top: 14px; margin-top: 8px; border-top: 1px solid var(--border-subtle);">
+            <span>Showing 1-25 of 124,433 records</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button class="btn-pill-desktop">&lt; Previous</button>
+              <span>Page 1</span>
+              <button class="btn-pill-desktop">Next &gt;</button>
             </div>
           </div>
+        </div>
 
-          <!-- 4 Metric Cards in 2x2 Grid (screen3.png) -->
-          <div class="forensic-metric-grid">
-            <div class="forensic-mini-card">
-              <span class="forensic-card-label">TOTAL RAW CORPUS</span>
-              <span class="forensic-card-num peach">124,433</span>
-              <span class="forensic-card-foot">Multi-Channel Scrape</span>
-            </div>
-            <div class="forensic-mini-card">
-              <span class="forensic-card-label">UNIFIED CLEAN RECORDS</span>
-              <span class="forensic-card-num">49,229</span>
-              <span class="forensic-card-foot">Deduped & PII Scrubbed</span>
-            </div>
-            <div class="forensic-mini-card">
-              <span class="forensic-card-label">DISCOVERED CLUSTERS</span>
-              <span class="forensic-card-num">314</span>
-              <span class="forensic-card-foot">HDBSCAN Density Peaks</span>
-            </div>
-            <div class="forensic-mini-card">
-              <span class="forensic-card-label">SYNTHESIZED THEMES</span>
-              <span class="forensic-card-num green">290</span>
-              <span class="forensic-card-foot">100% Grounded Quotes</span>
-            </div>
+      </section>
+
+      <!-- ================= TAB 5: ASK PM AI / COPILOT (screen2.png) ================= -->
+      <section class="tab-pane" id="tab-copilot">
+        <div class="hero-block">
+          <h1 class="hero-title-gradient">Ask PM Intelligence</h1>
+          <p class="hero-subtitle-text">Query the entire 124k+ customer voice dataset and receive instant, grounded PM insights.</p>
+        </div>
+
+        <!-- Prompt Box (screen2.png) -->
+        <div class="copilot-prompt-card-desktop">
+          <span style="font-size: 1.3rem;">💡</span>
+          <input type="text" id="copilot-query-input" class="copilot-input-field-desktop" placeholder="Why do shoppers abandon wishlist kurtis?" value="Why do shoppers abandon wishlist kurtis?" />
+          <button class="btn-analyze-desktop" id="btn-analyze" onclick="handleCopilotAnalyze()">
+            <span>➤ Analyze</span>
+          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">
+          <span>✨</span>
+          <span>PM INTELLIGENCE SYNTHESIS</span>
+        </div>
+
+        <!-- Structured Output Card (screen2.png) -->
+        <div class="copilot-output-card-desktop">
+          
+          <!-- Executive Summary -->
+          <div>
+            <div class="copilot-subhead-desktop">EXECUTIVE SUMMARY</div>
+            <p class="theme-desc-p" id="copilot-exec-summary" style="font-size: 1rem; color: #f1f5f9;">
+              Shoppers abandoning Kurti wishlists are predominantly characterized as <strong>"Hesitant Wishlist Hoarders"</strong>. They actively curate 10–30 items for aspirational outfit matching but stall at checkout. The primary barrier is not lack of intent, but systemic friction related to <strong>sizing unpredictability across private labels</strong> and the subsequent <strong>fear of post-order return logistics</strong>.
+            </p>
           </div>
 
-          <!-- Search & Filter Bar (screen3.png) -->
-          <div class="design-card" style="padding: 12px; gap: 10px;">
-            <input type="text" id="corpus-search-input" class="copilot-input-field" style="background: var(--bg-inner-quote); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);" placeholder="🔍 Search corpus (e.g. 'sizing uncertainty')..." />
-            <div class="forensic-filter-chips" style="margin-bottom: 0;">
-              <button class="filter-pill-btn active" onclick="filterCorpus(this, '')">All Sources</button>
-              <button class="filter-pill-btn" onclick="filterCorpus(this, 'app_store')">App Store</button>
-              <button class="filter-pill-btn" onclick="filterCorpus(this, 'play_store')">Play Store</button>
-              <button class="filter-pill-btn" onclick="filterCorpus(this, 'youtube')">YouTube</button>
-              <button class="filter-pill-btn" onclick="filterCorpus(this, 'reddit')">Reddit</button>
-            </div>
-          </div>
-
-          <!-- Noise Cluster View Active Banner (screen3.png) -->
-          <div class="noise-warning-banner">
-            <div class="noise-warning-icon">⚠️</div>
-            <div class="noise-warning-text">
-              <h4>Noise Cluster View Active</h4>
-              <p>Viewing HDBSCAN -1 outliers. These records fall outside established density peaks and may contain emerging edge cases or anomalous behavior.</p>
-            </div>
-          </div>
-
-          <!-- Table View (screen3.png) -->
-          <div class="matrix-card-wrap" style="padding: 12px;">
-            <table class="matrix-grid-table">
-              <thead>
-                <tr>
-                  <th style="width: 20%;">SOURCE</th>
-                  <th style="width: 55%;">REVIEW TEXT</th>
-                  <th style="width: 25%;">CLUSTER</th>
-                </tr>
-              </thead>
-              <tbody id="corpus-tbody">
-                <tr>
-                  <td><span class="brand-name-tag" style="color: #ff5e62;">🔴 YT</span></td>
-                  <td><div class="matrix-col-finding">"Watch try-on videos before purchasing because fabric can be very sheer. Sizing is super unpredictable compared to H&M."</div></td>
-                  <td><span class="tag-badge-item" style="color: var(--accent-peach);">Noise (-1)</span></td>
-                </tr>
-                <tr>
-                  <td><span class="brand-name-tag" style="color: #60a5fa;">🍏 App Store</span></td>
-                  <td><div class="matrix-col-finding">"App crashes during flash sale checkout when coupon is applied to wishlisted kurtas."</div></td>
-                  <td><span class="tag-badge-item">Cluster #4</span></td>
-                </tr>
-              </tbody>
-            </table>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #94a3b8; padding-top: 8px;">
-              <span>Showing 1-4 of 124,433 records</span>
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="btn-pill-action" style="padding: 2px 6px;">&lt;</button>
-                <span>Page 1</span>
-                <button class="btn-pill-action" style="padding: 2px 6px;">&gt;</button>
-              </div>
-            </div>
-          </div>
-
-        </section>
-
-        <!-- ================= TAB 5: ASK PM AI / COPILOT (screen2.png) ================= -->
-        <section class="tab-pane" id="tab-copilot">
-          <div class="page-title-block">
-            <h1 class="page-main-title">Ask PM<br/>Intelligence</h1>
-            <p class="page-desc-text">Query the entire 124k+ customer voice dataset and receive instant, grounded PM insights.</p>
-          </div>
-
-          <!-- Prompt Box (screen2.png) -->
-          <div class="copilot-input-box">
-            <span>💡</span>
-            <input type="text" id="copilot-query-input" class="copilot-input-field" placeholder="Why do shoppers abandon wishlist kurtis?" value="Why do shoppers abandon wishlist kurtis?" />
-            <button class="btn-analyze-action" id="btn-analyze" onclick="handleCopilotAnalyze()">
-              <span>➤ Analyze</span>
-            </button>
-          </div>
-
-          <div style="display: flex; align-items: center; gap: 6px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-top: 4px;">
-            <span>✨</span>
-            <span>PM INTELLIGENCE SYNTHESIS</span>
-          </div>
-
-          <!-- Structured Output Card (screen2.png) -->
-          <div class="copilot-synthesis-card">
-            <div>
-              <div class="copilot-subhead">EXECUTIVE SUMMARY</div>
-              <p class="theme-description-text" id="copilot-exec-summary">
-                Shoppers abandoning Kurti wishlists are predominantly characterized as <strong>"Hesitant Wishlist Hoarders"</strong>. They actively curate 10–30 items for aspirational outfit matching but stall at checkout. The primary barrier is not lack of intent, but systemic friction related to <strong>sizing unpredictability across private labels</strong> and the subsequent <strong>fear of post-order return logistics</strong>.
-              </p>
-            </div>
-
-            <div>
-              <div class="copilot-subhead">BEHAVIORAL FRICTION POINTS</div>
-              <div class="friction-point-row">
-                <div class="friction-row-icon">📏</div>
-                <div class="friction-row-content">
-                  <h4>Sizing & Fit Uncertainty</h4>
-                  <p>Inconsistent size charts across different Kurti brands lead to analysis paralysis.</p>
+          <!-- Behavioral Friction Points -->
+          <div>
+            <div class="copilot-subhead-desktop">BEHAVIORAL FRICTION POINTS</div>
+            <div class="grid-2col">
+              <div class="friction-point-desktop-row">
+                <div style="font-size: 1.2rem; color: var(--accent-peach);">📏</div>
+                <div>
+                  <h4 style="font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Sizing & Fit Uncertainty</h4>
+                  <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Inconsistent size charts across different Kurti brands lead to analysis paralysis.</p>
                 </div>
               </div>
-              <div class="friction-point-row">
-                <div class="friction-row-icon">📦</div>
-                <div class="friction-row-content">
-                  <h4>Return Friction Fear</h4>
-                  <p>Anxiety over complex pickup processes, store credit vs bank refund delays.</p>
+              <div class="friction-point-desktop-row">
+                <div style="font-size: 1.2rem; color: var(--accent-peach);">📦</div>
+                <div>
+                  <h4 style="font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Return Friction Fear</h4>
+                  <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Anxiety over complex pickup processes, store credit vs bank refund delays.</p>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div>
-              <div class="copilot-subhead">SHOPPER SEGMENTS AFFECTED</div>
-              <div class="segment-impact-meter-row">
+          <!-- Shopper Segments Affected -->
+          <div>
+            <div class="copilot-subhead-desktop">SHOPPER SEGMENTS AFFECTED</div>
+            <div class="grid-3col">
+              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
                 <span>Category Explorers</span>
                 <span style="color: var(--accent-peach); font-weight: 700;">82% Impact</span>
               </div>
-              <div class="segment-impact-meter-row">
+              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
                 <span>Curious But Stuck</span>
                 <span style="color: var(--accent-peach); font-weight: 700;">64% Impact</span>
               </div>
-              <div class="segment-impact-meter-row">
+              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
                 <span>Category Loyalists</span>
                 <span style="color: var(--accent-peach); font-weight: 700;">29% Impact</span>
               </div>
             </div>
-
-            <div>
-              <div class="copilot-subhead">ACTIONABLE PM INTERVENTIONS</div>
-              <div class="actionable-interventions-list">
-                <div class="intervention-sub-card">
-                  <h4>Fit Confidence Predictor</h4>
-                  <p>ML-driven size recommendations based on past purchases and aggregate return data.</p>
-                </div>
-                <div class="intervention-sub-card">
-                  <h4>Instant Size Exchange</h4>
-                  <p>Prominent messaging guaranteeing zero-friction doorstep size swaps.</p>
-                </div>
-                <div class="intervention-sub-card">
-                  <h4>Direct Price-Drop Alerts</h4>
-                  <p>Targeted push notifications to clear "holding pen" wishlists.</p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div class="copilot-subhead">GROUNDED QUOTES (124K CORPUS)</div>
-              <div class="inner-quote-card" style="border-left: 2px solid var(--pink-primary);">
-                <div class="quote-body-italic">
-                  "I love curating sets, but I watch try-on videos before purchasing because fabric can be very sheer and sizing for Kurtis is a wild guess between brands. Returning is a hassle."
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; margin-top: 4px;">
-                  <button class="btn-pill-action" onclick="openVideoModal('4qrpnaJu2tk', 'YouTube Try-On Haul: Fabric & Fit Review', 'Watch try-on videos before purchasing because fabric can be very sheer.')">
-                    <span style="color: #ff5e62;">🔴 YouTube</span>
-                  </button>
-                  <span style="color: #94a3b8;">Cluster: Sizing & Fit Ambiguity</span>
-                </div>
-              </div>
-            </div>
-
           </div>
 
-        </section>
+          <!-- Actionable PM Interventions -->
+          <div>
+            <div class="copilot-subhead-desktop">ACTIONABLE PM INTERVENTIONS</div>
+            <div class="actionable-interventions-grid-desktop">
+              <div class="intervention-box-desktop">
+                <h4>Fit Confidence Predictor</h4>
+                <p>ML-driven size recommendations based on past purchases and aggregate return data.</p>
+              </div>
+              <div class="intervention-box-desktop">
+                <h4>Instant Size Exchange</h4>
+                <p>Prominent messaging guaranteeing zero-friction doorstep size swaps.</p>
+              </div>
+              <div class="intervention-box-desktop">
+                <h4>Direct Price-Drop Alerts</h4>
+                <p>Targeted push notifications to clear "holding pen" wishlists.</p>
+              </div>
+            </div>
+          </div>
 
-      </div>
-    </div>
+          <!-- Grounded Quotes -->
+          <div>
+            <div class="copilot-subhead-desktop">GROUNDED QUOTES (124K CORPUS)</div>
+            <div class="grounded-quote-box-rich" style="border-left: 3px solid var(--pink-primary);">
+              <div class="quote-body-text-rich">
+                "I love curating sets, but I watch try-on videos before purchasing because fabric can be very sheer and sizing for Kurtis is a wild guess between brands. Returning is a hassle."
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-top: 6px;">
+                <button class="btn-pill-desktop pink-cta" onclick="openVideoModal('4qrpnaJu2tk', 'YouTube Try-On Haul: Fabric & Fit Review', 'Watch try-on videos before purchasing because fabric can be very sheer.')">
+                  <span style="color: #ff5e62;">🔴 YouTube</span>
+                </button>
+                <span style="color: #94a3b8;">Cluster: Sizing & Fit Ambiguity</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
   </div>
 
-  <!-- Sticky Bottom Quick Query Bar (Design.md bottom query bar) -->
-  <div class="sticky-copilot-bar">
-    <div class="copilot-bot-btn">🤖</div>
-    <input type="text" id="floating-query-input" class="sticky-copilot-input" placeholder="Query Intelligence Engine..." onkeydown="if(event.key==='Enter') executeStickyQuery()" />
-    <button class="sticky-send-btn" onclick="executeStickyQuery()" aria-label="Send Query">↑</button>
+  <!-- Floating Sticky Quick Query Bar (Bottom Right) -->
+  <div class="sticky-copilot-bar-desktop">
+    <span style="color: var(--pink-primary); font-size: 1.2rem;">🤖</span>
+    <input type="text" id="floating-query-input" class="sticky-copilot-input-desktop" placeholder="Query Intelligence Engine..." onkeydown="if(event.key==='Enter') executeStickyQuery()" />
+    <button class="sticky-send-btn-desktop" onclick="executeStickyQuery()" aria-label="Send Query">↑</button>
   </div>
-
-  <!-- Bottom App Navigation Bar (Design.md bottom tab bar) -->
-  <nav class="bottom-app-navigation">
-    <button class="nav-bottom-tab" data-target="tab-engine" onclick="switchTab('tab-engine')">
-      <span class="tab-icon-sym">📈</span>
-      <span>Engine</span>
-    </button>
-    <button class="nav-bottom-tab" data-target="tab-hypothesis" onclick="switchTab('tab-hypothesis')">
-      <span class="tab-icon-sym">💡</span>
-      <span>Hypothesis</span>
-    </button>
-    <button class="nav-bottom-tab active" data-target="tab-themes" onclick="switchTab('tab-themes')">
-      <span class="tab-icon-sym">🔥</span>
-      <span>Themes</span>
-    </button>
-    <button class="nav-bottom-tab" data-target="tab-forensics" onclick="switchTab('tab-forensics')">
-      <span class="tab-icon-sym">🔬</span>
-      <span>Forensics</span>
-    </button>
-    <button class="nav-bottom-tab" data-target="tab-copilot" onclick="switchTab('tab-copilot')">
-      <span class="tab-icon-sym">🤖</span>
-      <span>Copilot</span>
-    </button>
-  </nav>
 
   <!-- YouTube Video Modal -->
   <div class="modal-overlay" id="video-preview-modal" style="display: none;">
     <div class="modal-dialog-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-card);">
-        <span class="brand-name-tag" style="font-size: 0.72rem;">🔴 Video Evidence</span>
-        <button onclick="closeVideoModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer;">✕</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-card);">
+        <span class="mono-tag" style="font-size: 0.8rem; font-weight: 700; color: var(--pink-primary);">🔴 Video Evidence</span>
+        <button onclick="closeVideoModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
       </div>
       <div style="position: relative; width: 100%; padding-bottom: 56.25%; background: #000;">
         <iframe id="video-modal-iframe" src="" title="Video player" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
       </div>
-      <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 8px;">
-        <div class="code-quote-box" id="video-modal-quote-text" style="font-size: 0.78rem;">"Customer quote"</div>
-        <div style="display: flex; justify-content: flex-end; gap: 8px;">
-          <a id="video-modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-pill-action">↗ Open YouTube</a>
-          <button class="btn-pill-action" onclick="closeVideoModal()">Close</button>
+      <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+        <div class="code-quote-container" id="video-modal-quote-text" style="font-size: 0.88rem;">"Customer quote"</div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <a id="video-modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-pill-desktop pink-cta">↗ Open YouTube</a>
+          <button class="btn-pill-desktop" onclick="closeVideoModal()">Close</button>
         </div>
       </div>
     </div>
@@ -634,6 +697,6 @@
     ✓ Quote copied to clipboard!
   </div>
 
-  <script src="/static/app.js?v=6.0"></script>
+  <script src="/static/app.js?v=7.0"></script>
 </body>
 </html>
