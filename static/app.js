@@ -14,7 +14,17 @@ function getApiBase() {
     const stored = localStorage.getItem("MYNTRA_API_BASE");
     if (stored) return stored.replace(/\/$/, "");
   } catch (e) {}
-  return "";
+
+  // Local development
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    return "";
+  }
+  // If hosted on Railway directly
+  if (window.location.hostname.includes("railway.app")) {
+    return "";
+  }
+  // When hosted on Vercel / external frontend, point directly to Railway production backend
+  return "https://myntradiscoveryai-production.up.railway.app";
 }
 
 function apiUrl(path) {

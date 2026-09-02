@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://YOUR-RAILWAY-APP.up.railway.app/api/:path*"
+      "destination": "https://myntradiscoveryai-production.up.railway.app/api/:path*"
     },
     {
       "source": "/health",
-      "destination": "https://YOUR-RAILWAY-APP.up.railway.app/health"
+      "destination": "https://myntradiscoveryai-production.up.railway.app/health"
     },
     {
       "source": "/static/:path*",
