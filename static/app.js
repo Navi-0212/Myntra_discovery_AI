@@ -371,11 +371,20 @@ function renderThemesGrid(themesList, container) {
 }
 
 /* ================= 4. ASK PM AI (COPILOT) ================= */
-window.runSuggestedQuery = function(queryText) {
+window.runSuggestedQuery = function(btnEl, queryText) {
+  // Update query chips active state
+  document.querySelectorAll(".query-chip").forEach(chip => chip.classList.remove("active"));
+  if (btnEl && btnEl.classList) {
+    btnEl.classList.add("active");
+  }
+
+  // Update query input
   const input = document.getElementById("copilot-query-input");
   if (input) {
     input.value = queryText;
   }
+
+  // Trigger analysis
   handleCopilotAnalyze();
 };
 
@@ -384,6 +393,16 @@ window.handleCopilotAnalyze = async function() {
   const btn = document.getElementById("btn-analyze");
   const query = input?.value.trim();
   if (!query) return;
+
+  // Sync suggestion chips with input
+  document.querySelectorAll(".query-chip").forEach(chip => {
+    const chipText = chip.getAttribute("onclick") || "";
+    if (chipText.includes(query.slice(0, 20))) {
+      chip.classList.add("active");
+    } else if (!chip.classList.contains("active")) {
+      chip.classList.remove("active");
+    }
+  });
 
   if (btn) {
     btn.disabled = true;

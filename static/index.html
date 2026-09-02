@@ -507,12 +507,12 @@
         </div>
 
         <!-- Self Suggested Question Chips (Click to Fetch Real-Time Results) -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: -6px;">
+        <div class="suggested-queries-group" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: -6px;">
           <span class="card-top-tag" style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0;">SUGGESTED QUERIES (CLICK TO RUN):</span>
-          <button class="filter-pill-desktop active" onclick="runSuggestedQuery('Why do shoppers add items to wishlist but never buy?')">Wishlist Hoarding</button>
-          <button class="filter-pill-desktop" onclick="runSuggestedQuery('What role does sizing uncertainty play in cart abandonment?')">Sizing Uncertainty</button>
-          <button class="filter-pill-desktop" onclick="runSuggestedQuery('How do fake discount perceptions hurt sale conversions?')">Fake Discounts</button>
-          <button class="filter-pill-desktop" onclick="runSuggestedQuery('What feature would most increase wishlist checkout rate?')">Key Features & Interventions</button>
+          <button class="filter-pill-desktop query-chip active" onclick="runSuggestedQuery(this, 'Why do shoppers add items to wishlist but never buy?')">Wishlist Hoarding</button>
+          <button class="filter-pill-desktop query-chip" onclick="runSuggestedQuery(this, 'What role does sizing uncertainty play in cart abandonment?')">Sizing Uncertainty</button>
+          <button class="filter-pill-desktop query-chip" onclick="runSuggestedQuery(this, 'How do fake discount perceptions hurt sale conversions?')">Fake Discounts</button>
+          <button class="filter-pill-desktop query-chip" onclick="runSuggestedQuery(this, 'What feature would most increase wishlist checkout rate?')">Key Features & Interventions</button>
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">
