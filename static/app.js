@@ -1,5 +1,5 @@
 /**
- * Discovery Lens - Desktop Web App Interactive Controller (v7.0)
+ * Discovery Lens - Desktop Web App Interactive Controller (v7.5)
  * Rich PM Intelligence Aesthetic from Design.md
  */
 
@@ -59,6 +59,8 @@ window.switchTab = function(targetId) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initSentimentChart();
+  initPipelineRunner();
+  initForensicsExplorer();
   fetchTelemetry();
 });
 
@@ -166,10 +168,165 @@ function formatMarkdown(text) {
 }
 
 /* ================= FORENSICS FILTERING ================= */
+let corpusOffset = 0;
+const corpusLimit = 25;
+let currentSource = "";
+
+function initForensicsExplorer() {
+  const searchInput = document.getElementById("corpus-search-input");
+  if (searchInput) {
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        corpusOffset = 0;
+        loadCorpus();
+      }
+    });
+  }
+}
+
 window.filterCorpus = function(btnEl, source) {
   document.querySelectorAll(".filter-pill-desktop").forEach(b => b.classList.remove("active"));
   if (btnEl) btnEl.classList.add("active");
+  currentSource = source;
+  corpusOffset = 0;
+  loadCorpus();
 };
+
+async function loadCorpus() {
+  const tbody = document.getElementById("corpus-tbody");
+  const search = document.getElementById("corpus-search-input")?.value.trim() || "";
+  if (!tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="3" style="padding: 20px; text-align: center; color: #94a3b8;">Loading corpus records...</td></tr>`;
+
+  try {
+    let url = `/api/corpus?limit=${corpusLimit}&offset=${corpusOffset}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (currentSource) url += `&source=${encodeURIComponent(currentSource)}`;
+
+    const res = await fetch(apiUrl(url));
+    if (!res.ok) throw new Error("Fetch failed");
+    const data = await res.json();
+
+    if (!data.records || data.records.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="3" style="padding: 20px; text-align: center; color: #94a3b8;">No matching records found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.records.map(r => {
+      const src = r.source || "unknown";
+      const isYt = src === "youtube";
+      const badgeIcon = isYt ? "🔴 YT" : (src === "play_store" ? "🛍️ Play Store" : (src === "app_store" ? "🍏 App Store" : "💬 Reddit"));
+      const clusterBadge = r.cluster_id !== undefined ? (r.cluster_id === -1 ? "Noise (-1)" : `Cluster #${r.cluster_id}`) : "Cluster #14";
+      const text = r.text || r.body || "";
+      const videoId = r.video_id || "4qrpnaJu2tk";
+      const escapedText = text.replace(/"/g, "&quot;").replace(/'/g, "\\'");
+
+      return `
+        <tr>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+              <span class="mono-tag" style="font-weight: 700; color: #fff;">${badgeIcon}</span>
+              ${isYt ? `
+                <button class="btn-pill-desktop pink-cta" style="padding: 2px 6px; font-size: 0.7rem;" onclick="openVideoModal('${videoId}', 'YouTube Review Context', '${escapedText.slice(0, 60)}...')">
+                  <span>🎬 Preview</span>
+                </button>
+              ` : ""}
+            </div>
+          </td>
+          <td><div class="matrix-finding-desc-desktop">"${text}"</div></td>
+          <td><span class="persona-pill-item" style="color: ${clusterBadge.includes('Noise') ? 'var(--accent-peach)' : 'var(--pink-primary)'};">${clusterBadge}</span></td>
+        </tr>
+      `;
+    }).join("");
+  } catch (err) {
+    console.warn("Corpus load fallback:", err);
+  }
+}
+
+/* ================= PIPELINE RUNNER ================= */
+let pollInterval = null;
+
+function initPipelineRunner() {
+  const btn = document.getElementById("btn-trigger-pipeline");
+  if (btn) {
+    btn.addEventListener("click", triggerPipeline);
+  }
+}
+
+async function triggerPipeline() {
+  const provider = document.getElementById("pipe-provider")?.value || "groq";
+  const skipScrape = document.getElementById("pipe-skip-scrape")?.checked ?? true;
+  const months = parseInt(document.getElementById("pipe-months")?.value || "18", 10);
+  const btn = document.getElementById("btn-trigger-pipeline");
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "Running Pipeline...";
+  }
+
+  try {
+    const res = await fetch(apiUrl("/api/pipeline/run"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: provider,
+        skip_scrape: skipScrape,
+        sources: ["app_store", "play_store", "reddit", "youtube"],
+        months: months
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Trigger failed");
+    }
+
+    startPipelinePolling();
+  } catch (err) {
+    alert("Pipeline Error: " + err.message);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "▶ Trigger Discovery Pipeline Run";
+    }
+  }
+}
+
+function startPipelinePolling() {
+  if (pollInterval) clearInterval(pollInterval);
+
+  pollInterval = setInterval(async () => {
+    try {
+      const res = await fetch(apiUrl("/api/status"));
+      if (!res.ok) return;
+      const data = await res.json();
+      const state = data.pipeline_state;
+
+      const stepLabel = document.getElementById("pipe-current-step");
+      const percentLabel = document.getElementById("pipe-progress-percent");
+      const fill = document.getElementById("pipe-progress-fill");
+      const logs = document.getElementById("pipe-console-logs");
+      const btn = document.getElementById("btn-trigger-pipeline");
+
+      if (stepLabel) stepLabel.innerText = state.current_step || "Idle";
+      if (percentLabel) percentLabel.innerText = `${state.progress_percent || 0}%`;
+      if (fill) fill.style.width = `${state.progress_percent || 0}%`;
+
+      if (logs && state.logs) {
+        logs.innerHTML = state.logs.map(l => `<div>> ${l}</div>`).join("");
+        logs.scrollTop = logs.scrollHeight;
+      }
+
+      if (!state.is_running && state.progress_percent === 100) {
+        clearInterval(pollInterval);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "▶ Trigger Discovery Pipeline Run";
+        }
+      }
+    } catch (e) {}
+  }, 1500);
+}
 
 /* ================= TELEMETRY STATUS ================= */
 async function fetchTelemetry() {
