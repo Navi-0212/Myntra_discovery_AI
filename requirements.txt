@@ -1,0 +1,29 @@
+# scrapers
+google-play-scraper
+youtube-comment-downloader
+requests
+aiohttp             # async scraping (App Store, Reddit)
+feedparser          # parses Reddit's .rss feeds (Reddit's .json endpoints died May 2026)
+
+# upgrade paths (uncomment once you have credentials)
+praw                        # authenticated Reddit
+# google-api-python-client    # official YouTube Data API v3
+
+# pipeline
+pandas
+pyarrow
+sentence-transformers
+umap-learn
+hdbscan
+presidio-analyzer
+presidio-anonymizer
+
+# LLM theme extraction (pick one or both)
+google-generativeai   # Gemini
+groq                  # Groq
+
+# web server & API (Railway deployment)
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv

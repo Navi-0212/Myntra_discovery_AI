@@ -1,0 +1,53 @@
+{
+  "us": {
+    "last_completed_page": 10
+  },
+  "in": {
+    "last_completed_page": 10
+  },
+  "gb": {
+    "last_completed_page": 3
+  },
+  "au": {
+    "last_completed_page": 8
+  },
+  "ca": {
+    "last_completed_page": 6
+  },
+  "ae": {
+    "last_completed_page": 4
+  },
+  "sg": {
+    "last_completed_page": 8
+  },
+  "my": {
+    "last_completed_page": 1
+  },
+  "sa": {
+    "last_completed_page": 3
+  },
+  "nz": {
+    "last_completed_page": 1
+  },
+  "pt": {
+    "last_completed_page": 1
+  },
+  "lv": {
+    "last_completed_page": 1
+  },
+  "lu": {
+    "last_completed_page": 1
+  },
+  "at": {
+    "last_completed_page": 1
+  },
+  "ng": {
+    "last_completed_page": 1
+  },
+  "gh": {
+    "last_completed_page": 1
+  },
+  "np": {
+    "last_completed_page": 1
+  }
+}

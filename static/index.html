@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Myntra Discovery Lens | Wishlist-to-Purchase PM Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css?v=3.1">
+  <!-- Chart.js and Marked.js for high-fidelity interactive visualization and markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg-base: #0c0d12;
+      --bg-surface: #13151f;
+      --bg-card: #181b27;
+      --bg-card-hover: #1f2333;
+      --bg-input: #11131c;
+      --border-color: #252a3a;
+      --border-focus: #f59e0b;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --accent-gold: #f59e0b;
+      --accent-gold-light: #fbbf24;
+      --accent-gold-dark: #d97706;
+      --accent-gold-bg: rgba(245, 158, 11, 0.12);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-gold: #fbbf24;
+      --color-negative: #ef4444;
+      --color-negative-bg: rgba(239, 68, 68, 0.15);
+      --color-neutral: #60a5fa;
+      --color-neutral-bg: rgba(96, 165, 250, 0.15);
+      --color-positive: #10b981;
+      --color-positive-bg: rgba(16, 185, 129, 0.15);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --shadow-gold: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body.dark-theme {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    .lens-container { max-width: 1440px; margin: 0 auto; padding: 24px 32px 64px 32px; }
+    .lens-header { margin-bottom: 28px; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .brand-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent-gold); letter-spacing: -0.02em; }
+    .brand-subtitle { font-size: 0.95rem; color: var(--text-muted); margin-top: 2px; }
+    .status-pill { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.85rem; color: var(--text-secondary); }
+    .pulse-indicator { width: 8px; height: 8px; background-color: var(--color-positive); border-radius: 50%; box-shadow: 0 0 8px var(--color-positive); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+    .hypothesis-banner { display: flex; align-items: center; gap: 12px; background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(245, 158, 11, 0.05); }
+    .banner-icon { color: var(--accent-gold); display: flex; align-items: center; flex-shrink: 0; }
+    .banner-input { width: 100%; background: transparent; border: none; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; font-family: inherit; outline: none; cursor: default; }
+    .lens-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 0px; overflow-x: auto; }
+    .nav-tab { background: transparent; border: none; color: var(--text-secondary); font-size: 0.95rem; font-weight: 600; padding: 12px 20px; cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.25s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .stats-overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
+    .stat-mini-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; display: flex; flex-direction: column; }
+    .stat-label { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+    .stat-number { font-size: 1.8rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-primary); margin: 4px 0; }
+    .stat-number.gold-accent { color: var(--accent-gold); }
+    .stat-number.green-accent { color: var(--color-positive); }
+    .stat-note { font-size: 0.8rem; color: var(--text-secondary); }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .lens-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; }
+    .card-header { margin-bottom: 20px; }
+    .card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+    .card-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-top: 2px; }
+    .chart-wrapper { position: relative; height: 280px; width: 100%; }
+    .donut-wrapper { display: flex; justify-content: center; align-items: center; }
+    .persona-content { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+    .persona-highlight { background: rgba(245, 158, 11, 0.08); border-left: 4px solid var(--accent-gold); padding: 14px 18px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 16px; }
+    .persona-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+    .key-interventions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-pill { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--accent-gold-light); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 500; }
+    .table-responsive { overflow-x: auto; }
+    .lens-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    .lens-table th { background: var(--bg-card); color: var(--text-muted); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    .lens-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+    .lens-table tbody tr:hover td { background: var(--bg-card-hover); color: var(--text-primary); }
+    .badge-segment { display: inline-block; padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 600; background: var(--accent-gold-bg); color: var(--accent-gold-light); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .flowchart-container { display: flex; flex-direction: column; gap: 12px; justify-content: center; height: 100%; }
+    .flow-step-node { display: flex; align-items: center; gap: 14px; background: var(--bg-card); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: var(--radius-md); padding: 12px 18px; transition: transform 0.2s ease, border-color 0.2s ease; }
+    .flow-step-node:hover { transform: translateX(4px); border-color: var(--accent-gold); }
+    .flow-index { width: 28px; height: 28px; background: var(--accent-gold); color: #000; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+    .flow-text h4 { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); }
+    .flow-text p { font-size: 0.8rem; color: var(--text-muted); }
+    .section-intro { margin: 24px 0 20px 0; }
+    .section-intro h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+    .section-intro p { font-size: 0.95rem; color: var(--text-muted); }
+    .research-matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; }
+    .matrix-question-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; }
+    .matrix-q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .q-badge { background: var(--accent-gold-bg); color: var(--accent-gold); font-weight: 800; font-size: 0.8rem; padding: 4px 8px; border-radius: var(--radius-sm); flex-shrink: 0; }
+    .matrix-q-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
+    .matrix-q-answer { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; flex-grow: 1; }
+    .matrix-quote-box { background: var(--bg-card); border-left: 3px solid var(--accent-gold); padding: 10px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.85rem; color: var(--text-gold); font-style: italic; }
+    .themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+    .theme-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; }
+    .theme-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .theme-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); }
+    .theme-pill { font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: var(--radius-full); text-transform: uppercase; background: var(--accent-gold-bg); color: var(--accent-gold); }
+    .theme-summary { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 16px; }
+    .theme-meta-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle); }
+    .theme-quotes-list { display: flex; flex-direction: column; gap: 8px; }
+    .grounded-quote-item { background: var(--bg-card); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.82rem; color: #cbd5e1; border-left: 2px solid var(--accent-gold-dark); }
+    .ask-container { max-width: 900px; margin: 32px auto; }
+    .ask-hero { text-align: center; margin-bottom: 28px; }
+    .ask-icon { font-size: 2.8rem; margin-bottom: 8px; }
+    .ask-hero h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text-primary); }
+    .ask-hero p { font-size: 1rem; color: var(--text-muted); margin-top: 4px; }
+    .ask-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-card); }
+    .ask-input-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .ask-input { flex-grow: 1; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 18px; color: var(--text-primary); font-size: 1rem; outline: none; }
+    .ask-input:focus { border-color: var(--accent-gold); }
+    .suggested-queries { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .sugg-label { font-size: 0.82rem; color: var(--text-muted); }
+    .sugg-chip { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.8rem; padding: 6px 12px; border-radius: var(--radius-full); cursor: pointer; }
+    .sugg-chip:hover { background: var(--bg-card-hover); color: var(--accent-gold-light); }
+    .ask-response-card { margin-top: 24px; background: var(--bg-surface); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-gold); }
+    .response-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); }
+    .ai-badge { font-weight: 700; color: var(--accent-gold); font-size: 1rem; }
+    .response-body { font-size: 0.95rem; line-height: 1.7; color: #e2e8f0; }
+    .response-body h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--accent-gold); margin: 20px 0 10px 0; padding-bottom: 6px; border-bottom: 1px solid rgba(245, 158, 11, 0.2); }
+    .response-body h3:first-child { margin-top: 0; }
+    .response-body ul { margin: 12px 0 20px 0; padding-left: 24px; list-style-type: disc; display: flex; flex-direction: column; gap: 10px; }
+    .response-body li { font-size: 0.94rem; line-height: 1.65; color: #cbd5e1; display: list-item; }
+    .response-body li strong { color: #fbbf24; font-weight: 700; }
+    .response-quotes { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px; }
+    .corpus-controls { display: flex; gap: 12px; margin: 20px 0; }
+    .corpus-search { width: 400px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 16px; color: var(--text-primary); font-size: 0.9rem; outline: none; }
+    .filter-select { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 16px; color: var(--text-primary); font-size: 0.9rem; outline: none; }
+    .corpus-results-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; }
+    .pagination-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-color); }
+    .pipeline-runner-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 28px; max-width: 800px; margin-top: 20px; }
+    .pipeline-config-grid { display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; }
+    .config-item { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-label { display: flex; align-items: center; gap: 10px; color: var(--text-secondary) !important; cursor: pointer; }
+    .pipeline-status-box { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; }
+    .status-header { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; }
+    .progress-track { width: 100%; height: 8px; background: var(--border-color); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 14px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-gold-dark), var(--accent-gold)); transition: width 0.3s ease; }
+    .console-logs { background: #08090d; border-radius: var(--radius-sm); padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+    .log-line { color: #94a3b8; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; }
+    .btn-gold { background: var(--accent-gold); color: #0c0d12; }
+    .btn-gold:hover { background: var(--accent-gold-light); box-shadow: 0 0 14px rgba(245, 158, 11, 0.4); }
+    .btn-secondary { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); }
+    .btn-lg { padding: 14px 24px; font-size: 1rem; }
+    .spinner { width: 20px; height: 20px; border: 2px solid rgba(245, 158, 11, 0.2); border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Grounded Quote Card & Video Previews */
+    .grounded-quote-card { background: var(--bg-card); border: 1px solid var(--border-color); border-left: 3px solid var(--accent-gold); border-radius: var(--radius-sm); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; transition: all 0.2s ease; }
+    .grounded-quote-card:hover { background: var(--bg-card-hover); border-color: rgba(245, 158, 11, 0.4); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3); }
+    .quote-header-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .quote-source-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .quote-source-badge.badge-youtube { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .quote-source-badge.badge-play { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .quote-source-badge.badge-apple { background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); }
+    .quote-source-badge.badge-reddit { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+    .quote-author-tag { font-size: 0.75rem; color: var(--text-muted); font-style: normal; }
+    .quote-body-text { font-size: 0.9rem; line-height: 1.55; color: #e2e8f0; font-style: italic; }
+    .quote-video-callout { display: flex; align-items: center; gap: 10px; background: rgba(12, 13, 18, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 12px; }
+    .video-thumb-preview { width: 50px; height: 38px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+    .video-info-text { flex-grow: 1; min-width: 0; }
+    .video-title-label { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .video-sub-label { font-size: 0.72rem; color: var(--text-muted); }
+    .quote-actions-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+    .btn-quote-action { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.15s ease; text-decoration: none; background: var(--bg-surface); color: var(--text-secondary); }
+    .btn-quote-action:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border-color); }
+    .btn-quote-action.btn-action-video { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
+    .btn-quote-action.btn-action-video:hover { background: rgba(239, 68, 68, 0.32); color: #ffffff; box-shadow: 0 0 10px rgba(239, 68, 68, 0.35); }
+    .btn-quote-action.btn-action-corpus { background: var(--accent-gold-bg); color: var(--accent-gold-light); border-color: rgba(245, 158, 11, 0.3); }
+    .btn-quote-action.btn-action-corpus:hover { background: rgba(245, 158, 11, 0.28); color: #ffffff; }
+
+    /* Video Preview Modal */
+    .video-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(8, 9, 13, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; animation: modalFadeIn 0.2s ease forwards; }
+    @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .video-modal-dialog { background: var(--bg-surface); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--radius-lg); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.15); width: 100%; max-width: 820px; overflow: hidden; display: flex; flex-direction: column; animation: modalSlideUp 0.25s ease forwards; }
+    @keyframes modalSlideUp { from { transform: translateY(12px) scale(0.98); } to { transform: translateY(0) scale(1); } }
+    .video-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); background: var(--bg-card); }
+    .video-modal-title-group { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .video-modal-title-group h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .video-source-pill { background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-full); flex-shrink: 0; }
+    .modal-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-sm); transition: all 0.15s ease; line-height: 1; }
+    .modal-close-btn:hover { color: #f87171; background: rgba(239, 68, 68, 0.1); }
+    .video-modal-player-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+    .video-modal-player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-modal-meta { padding: 18px 20px; background: var(--bg-surface); display: flex; flex-direction: column; gap: 14px; }
+    .modal-quote-callout { display: flex; gap: 12px; background: var(--bg-card); border-left: 3px solid var(--accent-gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 16px; }
+    .modal-quote-icon { font-size: 1.2rem; color: var(--accent-gold); flex-shrink: 0; }
+    .modal-quote-text { font-size: 0.88rem; color: #e2e8f0; line-height: 1.5; }
+    .video-modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+  </style>
+</head>
+<body class="dark-theme">
+  <div class="lens-container">
+    
+    <!-- Top Header -->
+    <header class="lens-header">
+      <div class="header-top">
+        <div class="brand-block">
+          <div class="brand-title">Myntra Discovery Lens</div>
+          <div class="brand-subtitle" id="stats-subtitle">124,433 reviews across 4 sources (App Store, Play Store, YouTube, Reddit)</div>
+        </div>
+        <div class="header-status">
+          <div class="status-pill" id="backend-status-pill" title="Click to view or configure Railway Backend API URL" style="cursor: pointer;" onclick="promptBackendUrl()">
+            <span class="pulse-indicator"></span>
+            <span id="engine-status-text">Engine Live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Hypothesis Banner (Blinkit Lens Style) -->
+      <div class="hypothesis-banner" id="hypothesis-container">
+        <div class="banner-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <input type="text" class="banner-input" readonly value="Sizing ambiguity, fake discount fatigue, and return friction—not product discovery or brand awareness—are the dominant barriers turning active wishlists into abandoned carts." />
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="lens-nav">
+        <button class="nav-tab active" data-target="tab-dashboard" id="tab-btn-dashboard">
+          <span class="tab-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-tab" data-target="tab-matrix" id="tab-btn-matrix">
+          <span class="tab-icon">💡</span> 10 PM Research Matrix
+        </button>
+        <button class="nav-tab" data-target="tab-themes" id="tab-btn-themes">
+          <span class="tab-icon">🏷️</span> Discovery Themes
+        </button>
+        <button class="nav-tab" data-target="tab-ask" id="tab-btn-ask">
+          <span class="tab-icon">🤖</span> Ask PM AI
+        </button>
+        <button class="nav-tab" data-target="tab-corpus" id="tab-btn-corpus">
+          <span class="tab-icon">🔍</span> Corpus Explorer
+        </button>
+        <button class="nav-tab" data-target="tab-pipeline" id="tab-btn-pipeline">
+          <span class="tab-icon">⚡</span> Pipeline Runner
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="lens-main">
+
+      <!-- ================= TAB 1: DASHBOARD ================= -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <!-- Top Metrics Row -->
+        <div class="stats-overview-grid">
+          <div class="stat-mini-card">
+            <span class="stat-label">Total Raw Corpus</span>
+            <span class="stat-number gold-accent" id="dash-raw-count">124,433</span>
+            <span class="stat-note">Multi-Channel Scrape</span>
+          </div>
+          <div class="stat-mini-card">
+            <span class="stat-label">Unified Clean Records</span>
+            <span class="stat-number" id="dash-unified-count">45,778</span>
+            <span class="stat-note">Deduped & PII Scrubbed</span>
+          </div>
+          <div class="stat-mini-card">
+            <span class="stat-label">Discovered Clusters</span>
+            <span class="stat-number" id="dash-clusters-count">314</span>
+            <span class="stat-note">HDBSCAN Density Peaks</span>
+          </div>
+          <div class="stat-mini-card">
+            <span class="stat-label">Synthesized Themes</span>
+            <span class="stat-number green-accent" id="dash-themes-count">24</span>
+            <span class="stat-note">100% Grounded Quotes</span>
+          </div>
+        </div>
+
+        <!-- 2-Column Analytics Grid -->
+        <div class="dashboard-grid">
+          
+          <!-- Card 1: Top Discovery Pains (Horizontal Bar Chart) -->
+          <div class="lens-card">
+            <div class="card-header">
+              <h3 class="card-title">Top Discovery Pains</h3>
+              <p class="card-subtitle">Distribution of behavioral conversion barriers</p>
+            </div>
+            <div class="card-body chart-wrapper">
+              <canvas id="chart-discovery-pains"></canvas>
+            </div>
+          </div>
+
+          <!-- Card 2: Sentiment by Theme (Grouped Bar Chart) -->
+          <div class="lens-card">
+            <div class="card-header">
+              <h3 class="card-title">Sentiment by Theme</h3>
+              <p class="card-subtitle">Positive, Neutral, and Negative breakdown</p>
+            </div>
+            <div class="card-body chart-wrapper">
+              <canvas id="chart-sentiment-themes"></canvas>
+            </div>
+          </div>
+
+          <!-- Card 3: What Users Are Trying To Do (Persona Card) -->
+          <div class="lens-card">
+            <div class="card-header">
+              <h3 class="card-title">What Users Are Trying To Do</h3>
+              <p class="card-subtitle">Primary behavioral segment profile</p>
+            </div>
+            <div class="card-body persona-content">
+              <div class="persona-highlight">
+                <strong>"The Hesitant Wishlist Hoarder"</strong> — shoppers who actively shortlist 10–30 fashion items for aspirational curation and outfit matching, but hesitate to transition items to cart.
+              </div>
+              <p class="persona-text">
+                Rather than lacking product discovery or brand awareness, users stall due to <strong>sizing unpredictability</strong> across private labels and <strong>fear of post-order return friction</strong>. They use the wishlist as a persistent price-drop holding pen.
+              </p>
+              <div class="key-interventions">
+                <span class="tag-pill">Fit Confidence Predictor</span>
+                <span class="tag-pill">Direct Price-Drop Alerts</span>
+                <span class="tag-pill">Instant Size Exchange</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: User Segments (Donut Chart) -->
+          <div class="lens-card">
+            <div class="card-header">
+              <h3 class="card-title">User Segments</h3>
+              <p class="card-subtitle">Breakdown by shopper intent category</p>
+            </div>
+            <div class="card-body chart-wrapper donut-wrapper">
+              <canvas id="chart-user-segments"></canvas>
+            </div>
+          </div>
+
+          <!-- Card 5: Behavior Matrix (Data Grid) -->
+          <div class="lens-card table-card">
+            <div class="card-header">
+              <h3 class="card-title">Behavior Matrix</h3>
+              <p class="card-subtitle">Theme distribution across shopper intent clusters</p>
+            </div>
+            <div class="card-body table-responsive">
+              <table class="lens-table" id="behavior-matrix-table">
+                <thead>
+                  <tr>
+                    <th>Theme</th>
+                    <th>Unclear</th>
+                    <th>Category Explorer</th>
+                    <th>Category Loyalist</th>
+                    <th>Curious But Stuck</th>
+                    <th>Dominant Segment</th>
+                  </tr>
+                </thead>
+                <tbody id="behavior-matrix-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Card 6: Flowchart / Path Analysis Diagram -->
+          <div class="lens-card flow-card">
+            <div class="card-header">
+              <h3 class="card-title">Why Wishlists Fail to Convert</h3>
+              <p class="card-subtitle">Customer journey hesitation path</p>
+            </div>
+            <div class="card-body flowchart-container" id="flowchart-container">
+              <!-- Dynamically populated flowchart nodes -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: 10 PM RESEARCH MATRIX ================= -->
+      <section class="tab-pane" id="tab-matrix">
+        <div class="section-intro">
+          <h2>10 Core PM Research Questions Matrix</h2>
+          <p>Comprehensive empirical synthesis derived from 124k+ reviews mapped directly to the case study questions.</p>
+        </div>
+        <div class="research-matrix-grid" id="matrix-cards-container">
+          <!-- Filled by app.js -->
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: DISCOVERY THEMES ================= -->
+      <section class="tab-pane" id="tab-themes">
+        <div class="section-intro">
+          <h2>Synthesized Discovery Themes & Grounded Quotes</h2>
+          <p>Every theme is backed by dense geometric clustering and verified verbatim customer quotes.</p>
+        </div>
+        <div class="themes-grid" id="themes-cards-container">
+          <div class="loading-box"><div class="spinner"></div>Loading discovery themes...</div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: ASK PM AI ================= -->
+      <section class="tab-pane" id="tab-ask">
+        <div class="ask-container">
+          <div class="ask-hero">
+            <div class="ask-icon">🤖</div>
+            <h2>Ask PM Intelligence</h2>
+            <p>Query the entire 124k+ customer voice dataset and receive instant, grounded PM insights.</p>
+          </div>
+
+          <div class="ask-box">
+            <div class="ask-input-row">
+              <input type="text" id="ask-input" class="ask-input" placeholder="E.g., Why do users hesitate to purchase wishlisted kurtas and footwear?" />
+              <button class="btn btn-gold" id="btn-ask-submit">Ask PM AI</button>
+            </div>
+            
+            <div class="suggested-queries">
+              <span class="sugg-label">Try asking:</span>
+              <button class="sugg-chip">Why do shoppers add items to wishlist but never buy?</button>
+              <button class="sugg-chip">What role does sizing uncertainty play in returns?</button>
+              <button class="sugg-chip">How do fake discount perceptions hurt sale conversions?</button>
+              <button class="sugg-chip">What feature would most increase wishlist checkout rate?</button>
+            </div>
+          </div>
+
+          <div class="ask-response-card" id="ask-response-card" style="display: none;">
+            <div class="response-header">
+              <div class="ai-badge">✨ PM Intelligence Synthesis</div>
+              <span class="response-time" id="response-timestamp">Just now</span>
+            </div>
+            <div class="response-body" id="ask-response-content">
+              <!-- AI text will stream / appear here -->
+            </div>
+            <div class="response-quotes" id="ask-response-quotes">
+              <!-- Grounded quotes -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: CORPUS EXPLORER ================= -->
+      <section class="tab-pane" id="tab-corpus">
+        <div class="section-intro">
+          <h2>Raw Review Corpus Explorer</h2>
+          <p>Search and filter all 124,433 reviews across App Store, Play Store, YouTube, and Reddit.</p>
+        </div>
+
+        <div class="corpus-controls">
+          <div class="control-group">
+            <input type="text" id="corpus-search-input" class="corpus-search" placeholder="Search keywords (e.g. size, quality, return, refund, fake)..." />
+          </div>
+          <div class="control-group">
+            <select id="corpus-source-filter" class="filter-select">
+              <option value="">All Sources</option>
+              <option value="app_store">App Store</option>
+              <option value="play_store">Play Store</option>
+              <option value="youtube">YouTube</option>
+              <option value="reddit">Reddit</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary" id="btn-corpus-filter">Filter</button>
+        </div>
+
+        <div class="corpus-results-card">
+          <div class="results-header">
+            <span id="corpus-count-label">Showing 0 records</span>
+          </div>
+          <div class="table-responsive">
+            <table class="lens-table corpus-table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Review Text</th>
+                  <th>Cluster</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="corpus-tbody">
+                <tr><td colspan="4" class="text-center">Loading corpus records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-bar">
+            <button class="btn btn-sm" id="btn-prev-page" disabled>Previous</button>
+            <span id="page-indicator">Page 1</span>
+            <button class="btn btn-sm" id="btn-next-page">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: PIPELINE RUNNER ================= -->
+      <section class="tab-pane" id="tab-pipeline">
+        <div class="section-intro">
+          <h2>Engine Pipeline Runner</h2>
+          <p>Trigger end-to-end ingestion, normalization, dense embedding, HDBSCAN clustering, and LLM theme synthesis.</p>
+        </div>
+
+        <div class="pipeline-runner-card">
+          <div class="pipeline-config-grid">
+            <div class="config-item">
+              <label>LLM Synthesis Provider</label>
+              <select id="pipe-provider" class="filter-select">
+                <option value="groq" selected>Groq (openai/gpt-oss-120b - Fast)</option>
+                <option value="gemini">Google Gemini 1.5 Flash</option>
+              </select>
+            </div>
+            <div class="config-item">
+              <label>Scrape Mode</label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="pipe-skip-scrape" checked />
+                <span>Reuse existing 124,433 raw records (Skip Scrape)</span>
+              </label>
+            </div>
+            <div class="config-item">
+              <label>Lookback Window</label>
+              <input type="number" id="pipe-months" class="filter-input" value="18" min="1" max="36" />
+            </div>
+          </div>
+
+          <div class="pipeline-actions">
+            <button class="btn btn-gold btn-lg" id="btn-trigger-pipeline">
+              ▶ Trigger Discovery Pipeline Run
+            </button>
+          </div>
+
+          <div class="pipeline-status-box" id="pipe-status-box">
+            <div class="status-header">
+              <span class="status-title">Execution State: <strong id="pipe-current-step">Idle</strong></span>
+              <span class="status-percent" id="pipe-progress-percent">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="pipe-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="console-logs" id="pipe-console-logs">
+              <div class="log-line text-muted">> Pipeline ready to execute.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- YouTube Video Preview Modal -->
+  <div class="video-modal-overlay" id="video-preview-modal" style="display: none;">
+    <div class="video-modal-dialog">
+      <div class="video-modal-header">
+        <div class="video-modal-title-group">
+          <span class="video-source-pill">🔴 YouTube Evidence</span>
+          <h3 id="video-modal-title">Myntra Try-On Haul & Sizing Review</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-video-modal" aria-label="Close modal">✕</button>
+      </div>
+      
+      <div class="video-modal-player-wrapper">
+        <iframe id="video-modal-iframe" 
+                src="" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+        </iframe>
+      </div>
+      
+      <div class="video-modal-meta">
+        <div class="modal-quote-callout">
+          <div class="modal-quote-icon">💬</div>
+          <div class="modal-quote-text">
+            <strong style="color: #fbbf24; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">Verbatim Customer Quote</strong>
+            <span id="video-modal-quote-text">"Watch try-on videos before purchasing because fabric can be very sheer."</span>
+          </div>
+        </div>
+        
+        <div class="video-modal-actions">
+          <a id="video-modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+            <span>↗️ Open on YouTube</span>
+          </a>
+          <button class="btn btn-secondary btn-sm" onclick="closeVideoModal()">
+            <span>Close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Copy Toast Notification -->
+  <div id="copy-toast" style="display: none; position: fixed; bottom: 24px; right: 24px; background: #10b981; color: #fff; font-weight: 600; padding: 10px 18px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); z-index: 10000; font-size: 0.85rem; animation: modalFadeIn 0.2s ease;">
+    ✓ Quote copied to clipboard!
+  </div>
+
+  <script src="/static/app.js?v=4.1"></script>
+</body>
+</html>
