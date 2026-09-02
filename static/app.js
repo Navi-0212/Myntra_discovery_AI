@@ -410,12 +410,18 @@ window.handleCopilotAnalyze = async function() {
     input.placeholder = `Previous: "${query.slice(0, 40)}${query.length > 40 ? '...' : ''}" — Ask your next question...`;
   }
 
+  // Update Active Query Pill Banner
+  const queryPill = document.getElementById("copilot-active-query-pill");
+  if (queryPill) {
+    queryPill.innerText = `"${query}"`;
+  }
+
   // Sync suggestion chips with input
   document.querySelectorAll(".query-chip").forEach(chip => {
     const chipText = chip.getAttribute("onclick") || "";
     if (chipText.includes(query.slice(0, 20))) {
       chip.classList.add("active");
-    } else if (!chip.classList.contains("active")) {
+    } else {
       chip.classList.remove("active");
     }
   });
@@ -425,17 +431,20 @@ window.handleCopilotAnalyze = async function() {
     btn.innerText = "Analyzing...";
   }
 
-  const exec = document.getElementById("copilot-exec-summary");
+  const synthesisBody = document.getElementById("copilot-synthesis-body") || document.getElementById("copilot-exec-summary");
   const badge = document.getElementById("synthesis-status-badge");
   const quotesContainer = document.getElementById("copilot-quotes-container");
 
-  if (exec) {
-    exec.innerHTML = `<span style="color: var(--pink-primary); display: flex; align-items: center; gap: 8px;">
-      <span class="pulse-dot-pink"></span> Querying 124,433 customer reviews and grounding PM synthesis for "${query}"...
-    </span>`;
+  if (synthesisBody) {
+    synthesisBody.innerHTML = `
+      <div style="padding: 24px; background: rgba(255, 77, 121, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(255, 77, 121, 0.2); display: flex; align-items: center; gap: 12px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.92rem;">
+        <span class="pulse-dot-pink"></span>
+        <span>Synthesizing grounded PM intelligence for: <strong>"${query}"</strong>...</span>
+      </div>
+    `;
   }
   if (badge) {
-    badge.innerText = `PM INTELLIGENCE SYNTHESIS: "${query}"`;
+    badge.innerText = `PM INTELLIGENCE SYNTHESIS`;
   }
 
   try {
@@ -447,8 +456,8 @@ window.handleCopilotAnalyze = async function() {
     if (!res.ok) throw new Error("Synthesis API failed");
     const data = await res.json();
 
-    if (exec && data.answer) {
-      exec.innerHTML = formatMarkdown(data.answer);
+    if (synthesisBody && data.answer) {
+      synthesisBody.innerHTML = formatMarkdown(data.answer);
     }
 
     if (quotesContainer) {
@@ -459,12 +468,27 @@ window.handleCopilotAnalyze = async function() {
     }
   } catch (err) {
     console.warn("Copilot fallback:", err);
-    if (exec) {
-      exec.innerHTML = `
-        <div class="copilot-subhead-desktop">EXECUTIVE SUMMARY</div>
-        <p class="theme-desc-p" style="font-size: 1rem; color: #f1f5f9; line-height: 1.7;">
-          Shoppers querying <em>"${query}"</em> stall primarily due to <strong>sizing ambiguity across private labels</strong> and fear of <strong>post-order return logistics</strong>. High wishlist hoarding occurs as users use wishlists as a price-drop holding pen.
-        </p>
+    if (synthesisBody) {
+      synthesisBody.innerHTML = `
+        <div>
+          <div class="copilot-subhead-desktop">1. EXECUTIVE SUMMARY</div>
+          <p class="theme-desc-p" style="font-size: 0.98rem; color: #f1f5f9; line-height: 1.7;">
+            Shoppers querying <em>"${query}"</em> stall primarily due to <strong style="color: #fff;">sizing ambiguity across private labels</strong> and fear of <strong style="color: #fff;">post-order return logistics</strong>. High wishlist hoarding occurs as users use wishlists as a price-drop holding pen without cart commitment.
+          </p>
+        </div>
+        <div>
+          <div class="copilot-subhead-desktop">2. BEHAVIORAL FRICTION POINTS</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+              <span style="color: var(--pink-primary);">•</span>
+              <div><strong style="color: #fff;">Sizing Uncertainty:</strong> Inconsistent sizing across private labels causes cart hesitation.</div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+              <span style="color: var(--pink-primary);">•</span>
+              <div><strong style="color: #fff;">Return Friction:</strong> Fear of store credit lock-in and reverse courier pickup delays.</div>
+            </div>
+          </div>
+        </div>
       `;
     }
     if (quotesContainer) {
@@ -673,12 +697,71 @@ window.executeStickyQuery = function() {
 };
 
 function formatMarkdown(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/g, "<em>$1</em>")
-    .replace(/###\s*(.*?)\n/g, "<div class='copilot-subhead-desktop' style='margin-top: 14px;'>$1</div>")
-    .replace(/-\s*\*\*(.*?)\*\*:/g, "<div style='margin-top: 6px;'>• <strong>$1:</strong>")
-    .replace(/\n\n/g, "<br/><br/>");
+  if (!text) return "";
+
+  // Strip duplicate query echo lines
+  let cleanText = text
+    .replace(/^###\s*PM Intelligence Synthesis for:.*?\n/i, "")
+    .replace(/^PM Intelligence Synthesis for:.*?\n/i, "")
+    .trim();
+
+  const lines = cleanText.split("\n");
+  let html = "";
+  let inList = false;
+
+  for (let line of lines) {
+    let trimmed = line.trim();
+    if (!trimmed) {
+      if (inList) {
+        html += "</div>";
+        inList = false;
+      }
+      continue;
+    }
+
+    // Heading ###
+    if (trimmed.startsWith("###")) {
+      if (inList) {
+        html += "</div>";
+        inList = false;
+      }
+      const title = trimmed.replace(/^###\s*/, "").replace(/^\d+\.\s*/, "").toUpperCase();
+      html += `<div class="copilot-subhead-desktop" style="margin-top: 18px; margin-bottom: 8px;">${title}</div>`;
+      continue;
+    }
+
+    // Numbered item or bullet point
+    if (trimmed.startsWith("-") || trimmed.startsWith("*") || /^\d+\.\s+\*\*/.test(trimmed)) {
+      if (!inList) {
+        html += `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">`;
+        inList = true;
+      }
+      let content = trimmed.replace(/^[-*]\s*/, "").replace(/^\d+\.\s*/, "");
+      content = content
+        .replace(/\*\*(.*?)\*\*/g, "<strong style='color: #fff;'>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>");
+      html += `
+        <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+          <span style="color: var(--pink-primary); font-size: 1rem; line-height: 1.5;">•</span>
+          <div>${content}</div>
+        </div>
+      `;
+      continue;
+    }
+
+    // Regular text paragraph
+    if (inList) {
+      html += "</div>";
+      inList = false;
+    }
+    let pContent = trimmed
+      .replace(/\*\*(.*?)\*\*/g, "<strong style='color: #fff;'>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>");
+    html += `<p class="theme-desc-p" style="font-size: 0.98rem; color: #f1f5f9; line-height: 1.7; margin-bottom: 10px;">${pContent}</p>`;
+  }
+
+  if (inList) html += "</div>";
+  return html;
 }
 
 /* ================= 5. CORPUS EXPLORER (ROBUST & LIVE) ================= */

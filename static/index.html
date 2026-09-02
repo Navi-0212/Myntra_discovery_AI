@@ -515,83 +515,76 @@
           <button class="filter-pill-desktop query-chip" onclick="runSuggestedQuery(this, 'What feature would most increase wishlist checkout rate?')">Key Features & Interventions</button>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">
-          <span>✨</span>
-          <span id="synthesis-status-badge">PM INTELLIGENCE SYNTHESIS</span>
+        <!-- Active Query Banner -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; color: var(--pink-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">
+            <span>✨</span>
+            <span id="synthesis-status-badge">PM INTELLIGENCE SYNTHESIS</span>
+          </div>
+          <span class="mono-tag" style="font-size: 0.76rem; color: #94a3b8;">124,433 CUSTOMER REVIEWS GROUNDED</span>
+        </div>
+        <div id="copilot-active-query-pill" class="code-quote-container" style="font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 16px; border-left: 3px solid var(--pink-primary); padding: 10px 16px;">
+          "Why do shoppers add items to wishlist but never buy?"
         </div>
 
         <!-- Structured Output Card -->
         <div class="copilot-output-card-desktop" id="copilot-output-card">
           
-          <!-- Executive Summary -->
-          <div>
-            <div class="copilot-subhead-desktop">EXECUTIVE SUMMARY</div>
-            <div class="theme-desc-p" id="copilot-exec-summary" style="font-size: 1rem; color: #f1f5f9; line-height: 1.7;">
-              Shoppers abandoning Kurti wishlists are predominantly characterized as <strong>"Hesitant Wishlist Hoarders"</strong>. They actively curate 10–30 items for aspirational outfit matching but stall at checkout. The primary barrier is not lack of intent, but systemic friction related to <strong>sizing unpredictability across private labels</strong> and the subsequent <strong>fear of post-order return logistics</strong>.
+          <!-- Dynamic Formatted Synthesis Body -->
+          <div id="copilot-synthesis-body" style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <div class="copilot-subhead-desktop">1. EXECUTIVE SUMMARY</div>
+              <p class="theme-desc-p" style="font-size: 0.98rem; color: #f1f5f9; line-height: 1.7;">
+                Shoppers abandoning Kurti wishlists are predominantly characterized as <strong style="color: #fff;">"Hesitant Wishlist Hoarders"</strong>. They actively curate 10–30 items for aspirational outfit matching but stall at checkout. The primary barrier is not lack of intent, but systemic friction related to <strong style="color: #fff;">sizing unpredictability across private labels</strong> and the subsequent <strong style="color: #fff;">fear of post-order return logistics</strong>.
+              </p>
             </div>
-          </div>
-
-          <!-- Behavioral Friction Points -->
-          <div>
-            <div class="copilot-subhead-desktop">BEHAVIORAL FRICTION POINTS</div>
-            <div class="grid-2col" id="copilot-friction-points">
-              <div class="friction-point-desktop-row">
-                <div style="font-size: 1.2rem; color: var(--accent-peach);">📏</div>
-                <div>
-                  <h4 style="font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Sizing & Fit Uncertainty</h4>
-                  <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Inconsistent size charts across different Kurti brands lead to analysis paralysis.</p>
+            <div>
+              <div class="copilot-subhead-desktop">2. BEHAVIORAL FRICTION POINTS</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Sizing & Fit Uncertainty:</strong> Inconsistent size charts across different Kurti brands lead to analysis paralysis.</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Return Friction Fear:</strong> Anxiety over complex pickup processes, store credit vs bank refund delays.</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Deal Transparency:</strong> Doubts regarding artificial price hikes right before major discount sales.</div>
                 </div>
               </div>
-              <div class="friction-point-desktop-row">
-                <div style="font-size: 1.2rem; color: var(--accent-peach);">📦</div>
-                <div>
-                  <h4 style="font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Return Friction Fear</h4>
-                  <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Anxiety over complex pickup processes, store credit vs bank refund delays.</p>
+            </div>
+            <div>
+              <div class="copilot-subhead-desktop">3. SHOPPER SEGMENTS AFFECTED</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Wishlist Hoarders (42%):</strong> Use wishlist as a persistent price-drop holding pen without cart commitment.</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Category Explorers (34%):</strong> Stalled by sizing inconsistency across unfamiliar private labels.</div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Shopper Segments Affected -->
-          <div>
-            <div class="copilot-subhead-desktop">SHOPPER SEGMENTS AFFECTED</div>
-            <div class="grid-3col">
-              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
-                <span>Category Explorers</span>
-                <span style="color: var(--accent-peach); font-weight: 700;">82% Impact</span>
-              </div>
-              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
-                <span>Curious But Stuck</span>
-                <span style="color: var(--accent-peach); font-weight: 700;">64% Impact</span>
-              </div>
-              <div style="background: var(--bg-quote); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; display: flex; justify-content: space-between;">
-                <span>Category Loyalists</span>
-                <span style="color: var(--accent-peach); font-weight: 700;">29% Impact</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Actionable PM Interventions -->
-          <div>
-            <div class="copilot-subhead-desktop">ACTIONABLE PM INTERVENTIONS</div>
-            <div class="actionable-interventions-grid-desktop">
-              <div class="intervention-box-desktop">
-                <h4>Fit Confidence Predictor</h4>
-                <p>ML-driven size recommendations based on past purchases and aggregate return data.</p>
-              </div>
-              <div class="intervention-box-desktop">
-                <h4>Instant Size Exchange</h4>
-                <p>Prominent messaging guaranteeing zero-friction doorstep size swaps.</p>
-              </div>
-              <div class="intervention-box-desktop">
-                <h4>Direct Price-Drop Alerts</h4>
-                <p>Targeted push notifications to clear "holding pen" wishlists.</p>
+            <div>
+              <div class="copilot-subhead-desktop">4. ACTIONABLE PM FEATURE INTERVENTIONS</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Fit Confidence Predictor:</strong> ML-driven size recommendations based on past purchases and aggregate return data.</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; color: #cbd5e1; line-height: 1.6;">
+                  <span style="color: var(--pink-primary);">•</span>
+                  <div><strong style="color: #fff;">Instant Size Exchange:</strong> Prominent messaging guaranteeing zero-friction doorstep size swaps.</div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Grounded Customer Evidence Section -->
-          <div>
+          <div style="margin-top: 14px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08);">
             <div class="copilot-subhead-desktop">GROUNDED CUSTOMER EVIDENCE (124K CORPUS)</div>
             <div id="copilot-quotes-container" style="display: flex; flex-direction: column; gap: 12px;">
               <div class="grounded-quote-box-rich" style="border-left: 3px solid var(--pink-primary);">
